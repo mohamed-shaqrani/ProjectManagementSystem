@@ -5,7 +5,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
 
-[Route("/room/")]
+[Route("api/project/")]
 public class AddProjectEndpoint : BaseEndpoint<AddProjectRequestViewModel, AddProjectResponseViewModel>
 {
     public AddProjectEndpoint(BaseEndpointParam<AddProjectRequestViewModel> param) : base(param)
@@ -13,7 +13,7 @@ public class AddProjectEndpoint : BaseEndpoint<AddProjectRequestViewModel, AddPr
 
     }
     [HttpPost]
-    public async Task<EndpointResponse<bool>> AddProject(AddProjectRequestViewModel param)
+    public async Task<EndpointResponse<bool>> AddProject([FromBody] AddProjectRequestViewModel param)
     {
         var query = new AddProjectCommand(param.Title);
         var res = await _mediator.Send(query);
