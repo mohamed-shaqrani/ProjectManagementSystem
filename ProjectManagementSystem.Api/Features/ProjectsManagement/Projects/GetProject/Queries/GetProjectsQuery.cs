@@ -35,11 +35,11 @@ public class GetProjectsQueryHandler : BaseRequestHandler<GetProjectsQuery, Requ
                                                      Status = p.Status,
                                                      CreatedAt = p.CreatedAt
                                                  })
-    .ProjectTo<ProjectResponseViewModel>();
+                                               .ProjectTo<ProjectResponseViewModel>();
 
 
 
-        var paginatedResult = await PageList<ProjectResponseViewModel>.CreateAsync(result, 1, 10);
+        var paginatedResult = await PageList<ProjectResponseViewModel>.CreateAsync(result, request.ProjectParam.PageNumber, request.ProjectParam.PageSize);
 
         return RequestResult<PageList<ProjectResponseViewModel>>.Success(paginatedResult, "success");
     }

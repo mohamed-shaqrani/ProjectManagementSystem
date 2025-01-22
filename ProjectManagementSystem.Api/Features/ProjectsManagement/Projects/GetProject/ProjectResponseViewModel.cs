@@ -7,5 +7,7 @@ public class ProjectResponseViewModel
     public string Title { get; set; }
     public ProjectStatus Status { get; set; }
     public int NumTasks { get; set; }
+    public int NumOfUsers { get; set; }
+
     public DateTime DateCreated { get; set; }
 }
