@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
+using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
@@ -26,6 +27,11 @@ public class AutofacModule : Module
              .As<IRequestHandler<AddProjectCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
+
+        builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
+        builder.RegisterType<GetProjectsQueryHandler>()
+             .As<IRequestHandler<GetProjectsQuery, RequestResult<IEnumerable<ProjectResponseViewModel>>>>()
+             .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(ThisAssembly)
         .AsClosedTypesOf(typeof(IValidator<>))

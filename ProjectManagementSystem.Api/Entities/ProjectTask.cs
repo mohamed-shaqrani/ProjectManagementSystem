@@ -8,4 +8,6 @@ public class ProjectTask : BaseEntity
     public string Description { get; set; }
     public ProjectTaskStatus Status { get; set; }
     public User User { get; set; }
+    public Project Project { get; set; }
+
 }
