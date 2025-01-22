@@ -4,6 +4,7 @@ using MediatR;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject;
+using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
@@ -30,7 +31,7 @@ public class AutofacModule : Module
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
         builder.RegisterType<GetProjectsQueryHandler>()
-             .As<IRequestHandler<GetProjectsQuery, RequestResult<IEnumerable<ProjectResponseViewModel>>>>()
+             .As<IRequestHandler<GetProjectsQuery, RequestResult<PageList<ProjectResponseViewModel>>>>()
              .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(ThisAssembly)
