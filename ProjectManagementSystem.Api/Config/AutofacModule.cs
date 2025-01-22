@@ -2,6 +2,8 @@
 using FluentValidation;
 using MediatR;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Features.Common.Users;
+using ProjectManagementSystem.Api.Features.Common.Users.Queries;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject;
 using ProjectManagementSystem.Api.Helpers;
@@ -26,6 +28,18 @@ public class AutofacModule : Module
         builder.RegisterAssemblyTypes(typeof(AddProjectHandler).Assembly);
         builder.RegisterType<AddProjectHandler>()
              .As<IRequestHandler<AddProjectCommand, RequestResult<bool>>>()
+             .InstancePerLifetimeScope();
+
+        builder.RegisterType<AddTaskCommandHandler>()
+             .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
+             .InstancePerLifetimeScope();
+
+        builder.RegisterType<IsUserExistQueryHandler>()
+             .As<IRequestHandler<IsUserExistQuery, bool>>()
+             .InstancePerLifetimeScope();
+
+        builder.RegisterType<GetUserByIDQueryHandler>()
+             .As<IRequestHandler<GetUserByIDQuery, UserDTO>>()
              .InstancePerLifetimeScope();
 
 
