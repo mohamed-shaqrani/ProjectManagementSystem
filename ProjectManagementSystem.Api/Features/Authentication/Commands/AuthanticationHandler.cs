@@ -77,7 +77,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Commands
             new Claim(JwtRegisteredClaimNames.UniqueName, identifier),
             new Claim(JwtRegisteredClaimNames.Sub, user.Username, ClaimValueTypes.String),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role,((int)user.Role).ToString())
+            new Claim(ClaimTypes.Role,(user.Role).ToString())
             ];
         }
 
