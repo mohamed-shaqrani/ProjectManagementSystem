@@ -43,6 +43,9 @@ public class AutofacModule : Module
              .As<IRequestHandler<GetUserByIDQuery, UserDTO>>()
              .InstancePerLifetimeScope();
 
+        builder.RegisterType<HasAccessQueryHandler>()
+             .As<IRequestHandler<HasAccessQuery, bool>>()
+             .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
         builder.RegisterType<GetProjectsQueryHandler>()
