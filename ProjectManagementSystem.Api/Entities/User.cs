@@ -9,7 +9,7 @@ public class User : BaseEntity
     public Role Role { get; set; }
     public string Phone { get; set; }
     public string ImagePath { get; set; }
-
+    public ICollection<ProjectUserRoles> ProjectUserRoles = new List<ProjectUserRoles>();
     public DateTime PasswordResetCodeExpiration { get; set; }
     [StringLength(6)]
     public string? PasswordResetCode { get; set; }

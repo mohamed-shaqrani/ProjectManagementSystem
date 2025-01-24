@@ -15,21 +15,19 @@ using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Commands
 {
-    public record LoginCommand(  string Username,
-    string Email,
-   string Password, 
-
-    string phone ) : IRequest<ResponseViewModel<AuthanticationModel>>;
+    public record LoginCommand(  string Email,
+    string Password
+   ) : IRequest<ResponseViewModel<AuthanticationModel>>;
 
 
     public class AuthanticationHandler : IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>
     {
-        private IUnitOfWork unitofwork;
+        private IUnitOfWork _unitofwork;
 
         private JWT jwt;
         public AuthanticationHandler(IUnitOfWork unitOfWork, IOptions<JWT> jwt)
         {
-            unitofwork = unitOfWork;
+            _unitofwork = unitOfWork;
             this.jwt = jwt.Value;
         }
 
@@ -38,7 +36,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Commands
             var authModel = new AuthanticationModel();
 
 
-            var user = await unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
+            var user = await _unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -77,7 +75,8 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Commands
             new Claim(JwtRegisteredClaimNames.UniqueName, identifier),
             new Claim(JwtRegisteredClaimNames.Sub, user.Username, ClaimValueTypes.String),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role,(user.Role).ToString())
+            new Claim(ClaimTypes.Role,(user.Role).ToString()),
+            new Claim(ClaimTypes.Email, user.Email)
             ];
         }
 

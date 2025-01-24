@@ -1,6 +1,10 @@
 ﻿using Autofac;
 using FluentValidation;
+using HotelManagement.Core.ViewModels.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using ProjectManagementSystem.Api.Features.Authentication;
+using ProjectManagementSystem.Api.Features.Authentication.Commands;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.Users;
 using ProjectManagementSystem.Api.Features.Common.Users.Queries;
@@ -35,6 +39,14 @@ public class AutofacModule : Module
              .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
+        builder.RegisterType<AuthanticationHandler>()
+            .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterType<RegisterHandler>()
+          .As<IRequestHandler<RegisterCommand, ResponseViewModel<bool>>>()
+          .InstancePerLifetimeScope();
+
         builder.RegisterType<IsUserExistQueryHandler>()
              .As<IRequestHandler<IsUserExistQuery, bool>>()
              .InstancePerLifetimeScope();
@@ -42,7 +54,9 @@ public class AutofacModule : Module
         builder.RegisterType<GetUserByIDQueryHandler>()
              .As<IRequestHandler<GetUserByIDQuery, UserDTO>>()
              .InstancePerLifetimeScope();
-
+        builder.RegisterType<ProjectAuthorizeHandler>()
+              .As<IAuthorizationHandler>()
+              .InstancePerDependency();
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
         builder.RegisterType<GetProjectsQueryHandler>()
