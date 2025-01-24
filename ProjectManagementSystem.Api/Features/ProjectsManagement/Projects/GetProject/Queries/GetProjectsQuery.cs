@@ -50,7 +50,7 @@ public class GetProjectsQueryHandler : BaseRequestHandler<GetProjectsQuery, Requ
         var predicate = PredicateExtensions.PredicateExtensions.Begin<Project>(true);
         if (!string.IsNullOrEmpty(request.ProjectParam.Title))
 
-            predicate.And(p => p.Title.Contains(request.ProjectParam.Title));
+            predicate = predicate.And(p => p.Title.Contains(request.ProjectParam.Title));
 
 
         return predicate;
