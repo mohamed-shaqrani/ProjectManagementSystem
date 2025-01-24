@@ -1,4 +1,4 @@
-﻿namespace ProjectManagementSystem.Api.Features.Authentication
+﻿namespace ProjectManagementSystem.Api.Features.Authentication.Login
 {
     public class AuthanticationModel
     {

@@ -13,9 +13,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ProjectManagementSystem.Api.Features.Authentication.Commands
+namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
 {
-    public record LoginCommand(  string Email,
+    public record LoginCommand(string Email,
     string Password
    ) : IRequest<ResponseViewModel<AuthanticationModel>>;
 
@@ -31,7 +31,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Commands
             this.jwt = jwt.Value;
         }
 
-        public async Task<ResponseViewModel<AuthanticationModel>> Handle(LoginCommand loginCommand, CancellationToken token) 
+        public async Task<ResponseViewModel<AuthanticationModel>> Handle(LoginCommand loginCommand, CancellationToken token)
         {
             var authModel = new AuthanticationModel();
 
@@ -75,7 +75,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Commands
             new Claim(JwtRegisteredClaimNames.UniqueName, identifier),
             new Claim(JwtRegisteredClaimNames.Sub, user.Username, ClaimValueTypes.String),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role,(user.Role).ToString()),
+            new Claim(ClaimTypes.Role,user.Role.ToString()),
             new Claim(ClaimTypes.Email, user.Email)
             ];
         }

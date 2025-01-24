@@ -6,7 +6,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
 
 [Route("api/project/")]
-public class AddProjectEndpoint : BaseEndpoint<AddProjectRequestViewModel, AddProjectResponseViewModel>
+public class AddProjectEndpoint : BaseEndpoint<AddProjectRequestViewModel, EndpointResponse<bool>>
 {
     public AddProjectEndpoint(BaseEndpointParam<AddProjectRequestViewModel> param) : base(param)
     {
