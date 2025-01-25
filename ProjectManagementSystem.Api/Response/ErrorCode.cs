@@ -16,6 +16,8 @@ public enum ErrorCode
     UserNameExist = 201,
     UserEmailExist = 202,
     UserPhoneExist = 203,
+    InvalidCode = 204,
+
 
     //Room
     RoomNameIsRequired = 300,

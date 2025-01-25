@@ -1,36 +1,28 @@
 ﻿using HotelManagement.Service.PasswordHasherServices;
 using MediatR;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using ProjectManagementSystem.Api.Entities;
-using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.ImageService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Command
 {
-    public record RegisterCommand(string username, string email, string password, IFormFile imageFile) : IRequest<RequestResult<AuthModel>>;
-    public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<AuthModel>>
+    public record RegisterCommand(string username, string email, string password, IFormFile imageFile) : IRequest<RequestResult<string>>;
+    public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<string>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly JWT _jwt;
         private readonly IImageService _imageService;
 
-        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IOptions<JWT> jwt, IImageService imageService) : base(requestHandlerParam)
+        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IImageService imageService) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
-            _jwt = jwt.Value;
             _imageService = imageService;
         }
 
-        public override async Task<RequestResult<AuthModel>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public override async Task<RequestResult<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var authModel = new AuthModel();
 
@@ -39,7 +31,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
 
             if (EmailAlreadyRegs)
             {
-                return RequestResult<AuthModel>.Failure(Response.ErrorCode.UserEmailExist, "f");
+                return RequestResult<string>.Failure(Response.ErrorCode.UserEmailExist, "f");
             }
 
             var password = PasswordHasherService.HashPassord(request.password);
@@ -51,54 +43,11 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
             await _unitOfWork.GetRepository<TempAuthCode>().AddAsync(createCode);
             await _unitOfWork.SaveChangesAsync();
 
-            var claims = GenerateClaims(user);
 
-            var jwtSecurityToken = CreateAccessToken(claims);
-            authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            authModel.ExpiresOn = jwtSecurityToken.ValidTo;
-            authModel.IsAuthenticated = true;
-            authModel.Email = user.Email;
-            authModel.UserName = user.Username;
 
-            return RequestResult<AuthModel>.Success(authModel, "s");
+            return RequestResult<string>.Success(user.Email, "s");
 
         }
-        private Claim[] GenerateClaims(User user)
-        {
-            var identifier = user.Id.ToString();
 
-            return
-            [
-                new Claim(ClaimTypes.NameIdentifier, identifier)
-,
-            new Claim(JwtRegisteredClaimNames.UniqueName, identifier),
-            new Claim(JwtRegisteredClaimNames.Sub, user.Username, ClaimValueTypes.String),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role,user.Role.ToString()),
-            new Claim(ClaimTypes.Email, user.Email)
-            ];
-        }
-
-        private JwtSecurityToken CreateAccessToken(Claim[] claims)
-        {
-            var createdAt = DateTime.UtcNow;
-
-            var expiresAt = createdAt.AddDays(_jwt.DurationInDays);
-
-            var keyBytes = Encoding.UTF8.GetBytes(_jwt.Key);
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
-
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwt.Issuer,
-                audience: _jwt.Audience,
-                claims: claims,
-                expires: expiresAt,
-                signingCredentials: signingCredentials);
-
-            return jwtSecurityToken;
-        }
     }
 }

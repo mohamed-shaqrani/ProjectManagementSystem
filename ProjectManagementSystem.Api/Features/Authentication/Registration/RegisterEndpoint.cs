@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Response.Endpint;
@@ -7,7 +6,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 {
     [Route("api/register")]
-    public class RegisterEndpoint : BaseEndpoint<RegisterViewModel, EndpointResponse<bool>>
+    public class RegisterEndpoint : BaseEndpoint<RegisterViewModel, EndpointResponse<string>>
     {
         public RegisterEndpoint(BaseEndpointParam<RegisterViewModel> param) : base(param)
         {
@@ -15,7 +14,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthModel>> Register([FromForm] RegisterViewModel model)
+        public async Task<EndpointResponse<string>> Register([FromForm] RegisterViewModel model)
         {
             var register = new RegisterCommand(model.Username, model.Email, model.Password, model.imageFile);
 
@@ -23,10 +22,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
             if (res.IsSuccess)
             {
-                return EndpointResponse<AuthModel>.Success(res.Data, "Register Successfully");
+                return EndpointResponse<string>.Success(res.Data, "Register Successfully");
             }
 
-            return EndpointResponse<AuthModel>.Failure(res.ErrorCode, "Register Unsuccessfully");
+            return EndpointResponse<string>.Failure(res.ErrorCode, "Register Unsuccessfully");
         }
     }
 }
