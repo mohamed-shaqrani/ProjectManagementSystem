@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Response.Endpint;
@@ -14,18 +15,18 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
         [HttpPost]
 
-        public async Task<EndpointResponse<bool>> Register([FromBody] RegisterViewModel model)
+        public async Task<EndpointResponse<AuthModel>> Register([FromForm] RegisterViewModel model)
         {
-            var register = new RegisterCommand(model.Username, model.Email, model.Password);
+            var register = new RegisterCommand(model.Username, model.Email, model.Password, model.imageFile);
 
             var res = await _mediator.Send(register);
 
             if (res.IsSuccess)
             {
-                return EndpointResponse<bool>.Success(true, "Login Successfully");
+                return EndpointResponse<AuthModel>.Success(res.Data, "Register Successfully");
             }
 
-            return EndpointResponse<bool>.Failure(res.ErrorCode, "Register Unsuccessfully");
+            return EndpointResponse<AuthModel>.Failure(res.ErrorCode, "Register Unsuccessfully");
         }
     }
 }

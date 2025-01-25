@@ -8,8 +8,12 @@ public class User : BaseEntity
     public string Password { get; set; }
     public Role Role { get; set; }
     public string Phone { get; set; }
+    public bool IsAuthenticated { get; set; }
+
     public string ImagePath { get; set; }
     public ICollection<ProjectUserRoles> ProjectUserRoles = new List<ProjectUserRoles>();
+    public ICollection<ProjectTask> Tasks = new List<ProjectTask>();
+
     public DateTime PasswordResetCodeExpiration { get; set; }
     [StringLength(6)]
     public string? PasswordResetCode { get; set; }

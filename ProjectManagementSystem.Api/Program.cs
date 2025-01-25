@@ -43,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 MappingExtensions.Mapper = app.Services.GetRequiredService<IMapper>();
 
 app.UseAuthorization();

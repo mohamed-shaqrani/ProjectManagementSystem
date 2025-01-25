@@ -1,10 +1,8 @@
 ﻿using Autofac;
 using FluentValidation;
-using HotelManagement.Core.ViewModels.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
-using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.Users;
@@ -36,21 +34,26 @@ public class AutofacModule : Module
              .As<IRequestHandler<AddProjectCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
-        builder.RegisterAssemblyTypes(typeof(RegisterHandler).Assembly);
+        builder.RegisterAssemblyTypes(typeof(RegisterHandler).Assembly)
+               .Where(a => a.Name.EndsWith("Handler"))
+               .AsImplementedInterfaces()
+               .InstancePerLifetimeScope();
 
         builder.RegisterType<RegisterHandler>()
-          .As<IRequestHandler<RegisterCommand, RequestResult<bool>>>()
-          .InstancePerLifetimeScope();
+               .As<IRequestHandler<RegisterCommand, RequestResult<AuthModel>>>()
+               .InstancePerLifetimeScope();
 
-
+        builder.RegisterAssemblyTypes(typeof(ImageService.ImageService).Assembly)
+          .Where(a => a.Name.EndsWith("Service"))
+          .AsImplementedInterfaces().InstancePerLifetimeScope();
 
         builder.RegisterType<AddTaskCommandHandler>()
              .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
-        builder.RegisterType<LoginCommand>()
-            .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
-            .InstancePerLifetimeScope();
+        //builder.RegisterType<LoginCommand>()
+        //    .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
+        //    .InstancePerLifetimeScope();
 
         builder.RegisterType<IsUserExistQueryHandler>()
              .As<IRequestHandler<IsUserExistQuery, bool>>()
@@ -63,7 +66,6 @@ public class AutofacModule : Module
               .As<IAuthorizationHandler>()
               .InstancePerDependency();
 
-        builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
         builder.RegisterType<GetProjectsQueryHandler>()
              .As<IRequestHandler<GetProjectsQuery, RequestResult<PageList<ProjectResponseViewModel>>>>()
              .InstancePerLifetimeScope();
