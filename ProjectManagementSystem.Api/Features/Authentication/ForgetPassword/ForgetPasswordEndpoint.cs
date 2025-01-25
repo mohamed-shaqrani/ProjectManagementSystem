@@ -20,10 +20,6 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword
             return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty , "Email Sent with OTP verification code")
                              : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
         }
-        [HttpGet]
-        public string get()
-        {
-            return "mmmmm";
-        }
+        
     }
 }

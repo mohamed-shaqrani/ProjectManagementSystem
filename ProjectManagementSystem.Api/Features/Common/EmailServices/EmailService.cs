@@ -12,11 +12,11 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
         {
             //_emailConfig = emailConfig;
             _emailConfig = new EmailConfiguration();
-            _emailConfig.From = "minamichael14@gmail.com";
+            _emailConfig.From = "userName@gmail.com";
             _emailConfig.SmtpServer = "smtp.gmail.com";
             _emailConfig.Port = 465;
-            _emailConfig.UserName = "minamichael14@gmail.com";
-            _emailConfig.Password = "arktrqzgeuiaqbfo";
+            _emailConfig.UserName = "userName@gmail.com";
+            _emailConfig.Password = "*************";
         }
 
         public void SendEmail(string to, string subject, string body)

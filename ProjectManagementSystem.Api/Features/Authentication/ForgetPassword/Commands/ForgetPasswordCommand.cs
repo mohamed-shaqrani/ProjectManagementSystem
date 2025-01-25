@@ -50,7 +50,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Com
             var expiryTime = DateTime.UtcNow.AddMinutes(10);
 
             _OTPService.SaveOTP(request.Email, otp);
-            _emailService.SendEmail(/*request.Email*/ "mineme654@gmail.com", "Password Reset OTP", $"Your OTP for password reset is: <b>{otp}</b><br>This OTP will expire in 10 minutes.");
+            _emailService.SendEmail(request.Email, "Password Reset OTP", $"Your OTP for password reset is: <b>{otp}</b><br>This OTP will expire in 10 minutes.");
 
             return RequestResult<bool>.Success(default, "Email sent with otp.");
         }
