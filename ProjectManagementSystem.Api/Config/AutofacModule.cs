@@ -3,6 +3,7 @@ using FluentValidation;
 using HotelManagement.Core.ViewModels.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Commands;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
@@ -48,7 +49,7 @@ public class AutofacModule : Module
              .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
-        builder.RegisterType<LoginCommand>()
+        builder.RegisterType<AuthanticationHandler>()
             .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
             .InstancePerLifetimeScope();
 
@@ -71,6 +72,19 @@ public class AutofacModule : Module
         builder.RegisterAssemblyTypes(ThisAssembly)
         .AsClosedTypesOf(typeof(IValidator<>))
         .InstancePerLifetimeScope();
+
+
+
+        builder.RegisterAssemblyTypes(typeof(Program).Assembly)
+                            .Where(c => c.Name.EndsWith("Service"))
+                            .AsImplementedInterfaces()
+                            .InstancePerLifetimeScope();
+
+        builder.RegisterAssemblyTypes(typeof(ForgetPasswordCommandHandler).Assembly);
+        builder.RegisterType<ForgetPasswordCommandHandler>()
+             .As<IRequestHandler<ForgetPasswordCommand, RequestResult<bool>>>()
+             .InstancePerLifetimeScope();
+
 
 
     }
