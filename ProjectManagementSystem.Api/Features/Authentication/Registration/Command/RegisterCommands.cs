@@ -43,7 +43,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
             await _unitOfWork.GetRepository<TempAuthCode>().AddAsync(createCode);
             await _unitOfWork.SaveChangesAsync();
 
-
+            //to do send email with code to user email 
 
             return RequestResult<string>.Success(user.Email, "s");
 
