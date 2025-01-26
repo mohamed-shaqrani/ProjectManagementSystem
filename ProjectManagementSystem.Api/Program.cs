@@ -13,6 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -23,6 +29,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(container =>
     container.RegisterModule(new AutofacModule());
 });
 
+
 builder.Services.AddCompressionServices();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
@@ -32,6 +39,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ProjectAdmin", policy =>
         policy.Requirements.Add(new ProjectAdminRequirement()));
 });
+
+
+builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();
