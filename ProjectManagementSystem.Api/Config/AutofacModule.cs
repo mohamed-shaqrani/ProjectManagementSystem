@@ -26,6 +26,8 @@ public class AutofacModule : Module
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
         builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+
+
         builder.RegisterGeneric(typeof(BaseEndpointParam<>))
              .AsSelf()
              .InstancePerLifetimeScope();
@@ -48,7 +50,7 @@ public class AutofacModule : Module
              .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
              .InstancePerLifetimeScope();
 
-        builder.RegisterType<LoginCommand>()
+        builder.RegisterType<AuthanticationHandler>()
             .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
             .InstancePerLifetimeScope();
 
@@ -64,9 +66,12 @@ public class AutofacModule : Module
               .InstancePerDependency();
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
+
         builder.RegisterType<GetProjectsQueryHandler>()
              .As<IRequestHandler<GetProjectsQuery, RequestResult<PageList<ProjectResponseViewModel>>>>()
              .InstancePerLifetimeScope();
+
+        builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
         builder.RegisterAssemblyTypes(ThisAssembly)
         .AsClosedTypesOf(typeof(IValidator<>))

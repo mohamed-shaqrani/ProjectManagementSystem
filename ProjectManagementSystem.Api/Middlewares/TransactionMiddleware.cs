@@ -16,7 +16,7 @@ public class TransactionMiddleware
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext httpContent)
+    public async Task InvokeAsync(HttpContext httpContent,AppDbContext appDb)
     {
         IDbContextTransaction transaction = null;
         try

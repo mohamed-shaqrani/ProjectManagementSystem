@@ -22,7 +22,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
             if (res.IsSuccess)
             {
-                return EndpointResponse<bool>.Success(true, "Login Successfully");
+                return EndpointResponse<bool>.Success(true, "Register Successfully");
             }
 
             return EndpointResponse<bool>.Failure(res.ErrorCode, "Register Unsuccessfully");

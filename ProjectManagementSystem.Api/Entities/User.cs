@@ -7,11 +7,11 @@ public class User : BaseEntity
     public string Email { get; set; }
     public string Password { get; set; }
     public Role Role { get; set; }
-    public string Phone { get; set; }
-    public string ImagePath { get; set; }
+    public string Phone { get; set; } = string.Empty;
+    public string ImagePath { get; set; } = string.Empty;
     public ICollection<ProjectUserRoles> ProjectUserRoles = new List<ProjectUserRoles>();
     public DateTime PasswordResetCodeExpiration { get; set; }
     [StringLength(6)]
-    public string? PasswordResetCode { get; set; }
+    public string? PasswordResetCode { get; set; } = string.Empty;
 }
 
