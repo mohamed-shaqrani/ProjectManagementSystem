@@ -2,9 +2,6 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Commands;
-using ProjectManagementSystem.Api.Features.Authentication.Login;
-using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.Users;
@@ -56,9 +53,9 @@ public class AutofacModule : Module
           .AsImplementedInterfaces().InstancePerLifetimeScope();
 
 
-        builder.RegisterType<LoginCommand>()
-            .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
-            .InstancePerLifetimeScope();
+        //builder.RegisterType<LoginCommand>()
+        //    .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>>()
+        //    .InstancePerLifetimeScope();
 
         builder.RegisterType<IsUserExistQueryHandler>()
              .As<IRequestHandler<IsUserExistQuery, bool>>()
