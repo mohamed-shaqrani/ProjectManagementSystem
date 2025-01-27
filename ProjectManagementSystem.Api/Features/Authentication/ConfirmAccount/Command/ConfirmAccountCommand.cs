@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagementSystem.Api.Entities;
@@ -16,52 +14,52 @@ using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount.command
 {
-    public record ConfirmAccountCommand( string code) : IRequest<RequestResult<AuthModel>>;
+    public record ConfirmAccountCommand(string code) : IRequest<RequestResult<AuthModel>>;
     public class ConfirmAccountHandler : BaseRequestHandler<ConfirmAccountCommand, RequestResult<AuthModel>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly JWT _jwt;
-        
+
         private readonly IOTPService _otpservice;
 
         public ConfirmAccountHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IOptions<JWT> jwt, IOTPService otpservice) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
             _jwt = jwt.Value;
-           _otpservice = otpservice;
+            _otpservice = otpservice;
         }
 
         public override async Task<RequestResult<AuthModel>> Handle(ConfirmAccountCommand request, CancellationToken cancellationToken)
         {
-           
-           
+
+
             var authModel = new AuthModel();
 
-            if(string.IsNullOrEmpty(request.code)) 
+            if (string.IsNullOrEmpty(request.code))
             {
                 return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
             }
 
-            
+
 
             var Tempuser = _otpservice.GetTempUser(request.code);
-            if (Tempuser == null) 
+            if (Tempuser == null)
             {
                 return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
 
             }
             var user = new User()
             {
-              Email = Tempuser.Email,
-              Password = Tempuser.Password,
-              Username = Tempuser.UserName,
-              Role = Tempuser.Role,
-              Phone = Tempuser.Phone,
+                Email = Tempuser.Email,
+                Password = Tempuser.Password,
+                Username = Tempuser.UserName,
+                Role = Tempuser.Role,
+                Phone = Tempuser.Phone,
             };
 
             var repo = _unitOfWork.GetRepository<User>();
-           await repo.AddAsync(user);
+            await repo.AddAsync(user);
             await _unitOfWork.SaveChangesAsync();
 
 
