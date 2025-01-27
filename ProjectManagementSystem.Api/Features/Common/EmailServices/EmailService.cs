@@ -1,6 +1,6 @@
-﻿using ProjectManagementSystem.Api.Config;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
+using ProjectManagementSystem.Api.Config;
 
 
 namespace ProjectManagementSystem.Api.Features.Common.EmailServices
@@ -27,7 +27,7 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
                 throw new InvalidOperationException("Sender email address is not configured.");
             }
             emailMessage.From.Add(new MailboxAddress("Support", _emailConfig.From));
-            emailMessage.To.Add(new MailboxAddress("reciver" ,to));
+            emailMessage.To.Add(new MailboxAddress("reciver", to));
             emailMessage.Subject = subject;
 
             var bodyBuilder = new BodyBuilder
@@ -38,7 +38,7 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
 
             Send(emailMessage);
         }
-        
+
 
         private void Send(MimeMessage mailMessage)
         {

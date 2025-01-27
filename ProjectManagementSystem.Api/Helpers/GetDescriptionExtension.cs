@@ -2,7 +2,7 @@
 {
     public static class GetDescriptionExtension
     {
-        public static string GetDescription(this object obj) 
+        public static string GetDescription(this object obj)
         {
             return DescriptionAttribute.GetDescription(obj);
         }

@@ -23,7 +23,7 @@ namespace ProjectManagementSystem.Api.Features.Common.OTPService
 
         public string GetOTP(string email)
         {
-            var otp =_memoryCache.Get<string>(email);
+            var otp = _memoryCache.Get<string>(email);
             return otp;
         }
 

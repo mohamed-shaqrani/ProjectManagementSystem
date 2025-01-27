@@ -31,7 +31,7 @@ namespace HotelManagement.Service.PasswordHasherServices
         private static string GenerateSalt()
         {
             var saltPassword = new byte[16];
-            using(var rng = new RNGCryptoServiceProvider())
+            using (var rng = new RNGCryptoServiceProvider())
             {
                 rng.GetBytes(saltPassword);
             }

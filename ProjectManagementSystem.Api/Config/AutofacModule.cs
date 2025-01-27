@@ -2,8 +2,6 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Commands;
-using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;

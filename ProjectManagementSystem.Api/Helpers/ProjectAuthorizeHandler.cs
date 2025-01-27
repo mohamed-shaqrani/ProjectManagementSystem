@@ -11,7 +11,7 @@ namespace ProjectManagementSystem.Api.Helpers
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public ProjectAuthorizeHandler(IUnitOfWork unitOfWork) 
+        public ProjectAuthorizeHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -19,28 +19,28 @@ namespace ProjectManagementSystem.Api.Helpers
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ProjectAdminRequirement requirement)
         {
             var UserRepo = _unitOfWork.GetRepository<User>();
-            var UserEmail = context.User.Claims.FirstOrDefault(c=> c.Type == ClaimTypes.Email);
+            var UserEmail = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
             var UserEmailValue = UserEmail?.Value;
-            if (UserEmailValue == null) 
-            {  
+            if (UserEmailValue == null)
+            {
                 return;
             }
 
             var user = await UserRepo.GetAll(u => u.Email == UserEmailValue).FirstOrDefaultAsync();
-            if (user is null) 
+            if (user is null)
             {
                 return;
             }
 
             var UserRolesRepo = _unitOfWork.GetRepository<ProjectUserRoles>();
-            var ProjectId =  context.Resource as int?;
-            if (ProjectId is null) 
+            var ProjectId = context.Resource as int?;
+            if (ProjectId is null)
             {
                 return;
             }
             var Any = await UserRolesRepo.AnyAsync(up => up.UserId == user.Id && up.ProjectId == ProjectId && up.Role == Role.Admin);
 
-            if (!Any) 
+            if (!Any)
             {
                 context.Succeed(requirement);
             }

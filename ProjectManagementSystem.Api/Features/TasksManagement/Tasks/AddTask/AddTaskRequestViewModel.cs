@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using ProjectManagementSystem.Api.Entities;
-using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
 {
