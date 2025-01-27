@@ -3,6 +3,8 @@ using FluentValidation;
 using HotelManagement.Core.ViewModels.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using ProjectManagementSystem.Api.Features.Authentication.Login;
+using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.Users;
@@ -57,7 +59,7 @@ public class AutofacModule : Module
 
 
         builder.RegisterType<AuthanticationHandler>()
-            .As<IRequestHandler<LoginCommand, ResponseViewModel < AuthModel >>> ()
+            .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>>()
             .InstancePerLifetimeScope();
 
         builder.RegisterType<IsUserExistQueryHandler>()
@@ -75,7 +77,7 @@ public class AutofacModule : Module
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
 
-       
+
 
 
 
