@@ -1,18 +1,17 @@
-﻿using AutoMapper.Execution;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ProjectManagementSystem.Api.Helpers
 {
     public class DescriptionAttribute : Attribute
     {
-       private string Word;
+        private string Word;
 
-        public DescriptionAttribute(string word) 
+        public DescriptionAttribute(string word)
         {
             this.Word = word;
         }
 
-        public static string GetDescription(object obj) 
+        public static string GetDescription(object obj)
         {
             string description = string.Empty;
             if (obj == null)
@@ -27,7 +26,7 @@ namespace ProjectManagementSystem.Api.Helpers
             if (members is null || !members.Any())
                 return description;
             object[] attributes = members[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if(attributes is null || !attributes.Any()) 
+            if (attributes is null || !attributes.Any())
             {
                 return description;
             }

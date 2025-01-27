@@ -1,7 +1,7 @@
-﻿using ProjectManagementSystem.Api.Features.Common.EmailServices;
-using MediatR;
+﻿using MediatR;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Features.Common.EmailServices;
 using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
@@ -40,10 +40,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Com
                 return response;
             }
 
-            var userExist =await _unitOfWork.GetRepository<User>().AnyAsync(x=>x.Email == request.Email);
+            var userExist = await _unitOfWork.GetRepository<User>().AnyAsync(x => x.Email == request.Email);
             if (!userExist)
             {
-                return RequestResult<bool>.Failure(Response.ErrorCode.UserNotFound , "User Not Found");
+                return RequestResult<bool>.Failure(Response.ErrorCode.UserNotFound, "User Not Found");
             }
 
 

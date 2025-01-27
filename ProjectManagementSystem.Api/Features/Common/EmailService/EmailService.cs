@@ -1,5 +1,4 @@
-﻿using ProjectManagementSystem.Api.Config;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
 using ProjectManagementSystem.Api.Features.Common.EmailService;
 using System.Net.Mail;

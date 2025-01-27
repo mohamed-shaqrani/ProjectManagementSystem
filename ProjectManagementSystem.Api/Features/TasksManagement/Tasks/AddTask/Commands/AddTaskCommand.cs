@@ -8,12 +8,12 @@ using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Commands
 {
-    public record AddTaskCommand(string Title ,string Description, ProjectTaskStatus Status, int UserID) : IRequest<RequestResult<bool>>;
+    public record AddTaskCommand(string Title, string Description, ProjectTaskStatus Status, int UserID) : IRequest<RequestResult<bool>>;
 
     public class AddTaskCommandHandler : BaseRequestHandler<AddTaskCommand, RequestResult<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AddTaskCommandHandler(BaseRequestHandlerParam requestHandlerParam , IUnitOfWork unitOfWork)
+        public AddTaskCommandHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork)
             : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
@@ -26,7 +26,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Com
             {
                 return response;
             }
-            
+
             var task = new ProjectTask
             {
                 CreatedAt = DateTime.UtcNow,

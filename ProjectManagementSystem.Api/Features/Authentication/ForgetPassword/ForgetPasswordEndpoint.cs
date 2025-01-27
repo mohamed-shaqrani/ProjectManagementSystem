@@ -17,9 +17,9 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword
         {
             var result = await _mediator.Send(new ForgetPasswordCommand(param.Email));
 
-            return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty , "Email Sent with OTP verification code")
+            return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty, "Email Sent with OTP verification code")
                              : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
         }
-        
+
     }
 }

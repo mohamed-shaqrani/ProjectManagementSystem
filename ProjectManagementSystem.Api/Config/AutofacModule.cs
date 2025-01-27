@@ -58,7 +58,7 @@ public class AutofacModule : Module
           .AsImplementedInterfaces().InstancePerLifetimeScope();
 
 
-        builder.RegisterType<AuthanticationHandler>()
+        builder.RegisterType<LoginCommand>()
             .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>>()
             .InstancePerLifetimeScope();
 
