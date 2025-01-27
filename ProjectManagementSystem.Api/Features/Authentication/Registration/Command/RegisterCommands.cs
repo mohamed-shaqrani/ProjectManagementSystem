@@ -1,25 +1,32 @@
 ﻿using HotelManagement.Service.PasswordHasherServices;
 using MediatR;
+using NETCore.MailKit.Core;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Features.Common.EmailService;
+using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.ImageService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Command
 {
-    public record RegisterCommand(string username, string email, string password, IFormFile imageFile) : IRequest<RequestResult<string>>;
+    public record RegisterCommand(string username, string email, string password,  string phone) : IRequest<RequestResult<string>>;
     public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<string>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IImageService _imageService;
+    
+        private readonly IOTPService _otpService;
+        private readonly IEmailServices _emailService;
 
-        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IImageService imageService) : base(requestHandlerParam)
+        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork,IOTPService oTPService, IEmailServices emailService) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
-            _imageService = imageService;
+            
+            _otpService = oTPService;
+            _emailService = emailService;
         }
 
         public override async Task<RequestResult<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -36,13 +43,15 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
 
             var password = PasswordHasherService.HashPassord(request.password);
             var role = Role.User;
-            var imagePath = await _imageService.UploadImage(request.imageFile, "users");
-            var user = new User { Email = request.email, Password = password, Role = role, Username = request.username, ImagePath = imagePath, Phone = "1000000" };
-            await repo.AddAsync(entity: user);
-            var createCode = new TempAuthCode { Email = user.Email, Code = new Random().Next(10000, 99999), IsUsed = false, CreatedAt = DateTime.UtcNow, ExpiresOn = DateTime.Now.AddSeconds(120) };
-            await _unitOfWork.GetRepository<TempAuthCode>().AddAsync(createCode);
-            await _unitOfWork.SaveChangesAsync();
+            
+            var user = new UserTempData { Email = request.email, Password = password, Role = role, UserName = request.username, Phone = request.phone };
 
+
+            var otp = _otpService.GenerateOTP();
+
+            _otpService.SaveOTP(user, otp);
+            var body = $"Please use this code to verify your account \n {otp}";
+            _emailService.SendEmail(user.Email, "verification", body);
             //to do send email with code to user email 
 
             return RequestResult<string>.Success(user.Email, "s");

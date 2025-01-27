@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Api.Config;
 using ProjectManagementSystem.Api.Data;
 using ProjectManagementSystem.Api.Extensions;
+using ProjectManagementSystem.Api.Features.Common.EmailService;
+using ProjectManagementSystem.Api.Features.Common.EmailServices;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.MappingProfiles;
 using ProjectManagementSystem.Api.Middlewares;
@@ -14,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 var emailConfig = builder.Configuration
-        .GetSection("EmailConfiguration")
+        .GetSection("EmailSettings")
         .Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfig);
 
@@ -39,9 +41,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ProjectAdmin", policy =>
         policy.Requirements.Add(new ProjectAdminRequirement()));
 });
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
 
 
 builder.Services.AddMemoryCache();
+
 
 
 var app = builder.Build();

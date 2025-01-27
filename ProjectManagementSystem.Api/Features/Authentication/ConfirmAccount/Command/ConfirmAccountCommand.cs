@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,33 +16,55 @@ using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount.command
 {
-    public record ConfirmAccountCommand(string email, int code) : IRequest<RequestResult<AuthModel>>;
+    public record ConfirmAccountCommand( string code) : IRequest<RequestResult<AuthModel>>;
     public class ConfirmAccountHandler : BaseRequestHandler<ConfirmAccountCommand, RequestResult<AuthModel>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly JWT _jwt;
+        
+        private readonly IOTPService _otpservice;
 
-        public ConfirmAccountHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IOptions<JWT> jwt) : base(requestHandlerParam)
+        public ConfirmAccountHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IOptions<JWT> jwt, IOTPService otpservice) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
             _jwt = jwt.Value;
+           _otpservice = otpservice;
         }
 
         public override async Task<RequestResult<AuthModel>> Handle(ConfirmAccountCommand request, CancellationToken cancellationToken)
         {
-
-            var checkCode = await _unitOfWork.GetRepository<TempAuthCode>()
-                                                                        .GetAll(e => e.Email == request.email && e.Code == request.code && e.IsUsed == false && e.ExpiresOn > DateTime.Now)
-                                                                        .FirstOrDefaultAsync();
-            if (checkCode == null)
-            {
-                return RequestResult<AuthModel>.Failure(Response.ErrorCode.InvalidCode, " Invalid Confirmation Code");
-
-            }
+           
+           
             var authModel = new AuthModel();
 
-            var user = await _unitOfWork.GetRepository<User>().GetAll(e => e.Email == request.email).FirstOrDefaultAsync();
+            if(string.IsNullOrEmpty(request.code)) 
+            {
+                return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
+            }
+
+            
+
+            var Tempuser = _otpservice.GetTempUser(request.code);
+            if (Tempuser == null) 
+            {
+                return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
+
+            }
+            var user = new User()
+            {
+              Email = Tempuser.Email,
+              Password = Tempuser.Password,
+              Username = Tempuser.UserName,
+              Role = Tempuser.Role,
+              Phone = Tempuser.Phone,
+            };
+
+            var repo = _unitOfWork.GetRepository<User>();
+           await repo.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+
+
             var claims = GenerateClaims(user);
 
             var jwtSecurityToken = CreateAccessToken(claims);

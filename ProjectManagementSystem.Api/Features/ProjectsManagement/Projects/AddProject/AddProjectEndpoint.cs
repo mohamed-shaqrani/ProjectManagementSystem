@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
 using ProjectManagementSystem.Api.Response.Endpint;
@@ -12,7 +13,10 @@ public class AddProjectEndpoint : BaseEndpoint<AddProjectRequestViewModel, Endpo
     {
 
     }
+
+    [Authorize(Roles ="User")]
     [HttpPost]
+
     public async Task<EndpointResponse<bool>> AddProject([FromBody] AddProjectRequestViewModel param)
     {
         var query = new AddProjectCommand(param.Title);

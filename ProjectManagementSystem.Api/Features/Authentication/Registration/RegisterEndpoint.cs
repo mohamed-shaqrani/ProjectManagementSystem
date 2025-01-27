@@ -14,15 +14,19 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
         [HttpPost]
 
-        public async Task<EndpointResponse<string>> Register([FromForm] RegisterViewModel model)
+        public async Task<EndpointResponse<string>> Register([FromBody] RegisterViewModel model)
         {
-            var register = new RegisterCommand(model.Username, model.Email, model.Password, model.imageFile);
+            var register = new RegisterCommand(model.Username, model.Email, model.Password, model.phone);
 
             var res = await _mediator.Send(register);
 
             if (res.IsSuccess)
             {
+
+              
+
                 return EndpointResponse<string>.Success(res.Data, "Register Successfully");
+
             }
 
             return EndpointResponse<string>.Failure(res.ErrorCode, "Register Unsuccessfully");

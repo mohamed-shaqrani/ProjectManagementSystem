@@ -5,6 +5,7 @@ using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
+using ProjectManagementSystem.Api.Features.Common.EmailService;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Commands
 {
@@ -13,13 +14,13 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Com
     public class ForgetPasswordCommandHandler : BaseRequestHandler<ForgetPasswordCommand, RequestResult<bool>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailService _emailService;
+        private readonly IEmailServices _emailService;
         private readonly IOTPService _OTPService;
 
         public ForgetPasswordCommandHandler(
             BaseRequestHandlerParam requestHandlerParam,
             IUnitOfWork unitOfWork, 
-            IEmailService emailService,
+            IEmailServices emailService,
             IOTPService OTPService            
             )
             : base(requestHandlerParam)
@@ -49,7 +50,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Com
             var otp = _OTPService.GenerateOTP();
             var expiryTime = DateTime.UtcNow.AddMinutes(10);
 
-            _OTPService.SaveOTP(request.Email, otp);
+            
             _emailService.SendEmail(request.Email, "Password Reset OTP", $"Your OTP for password reset is: <b>{otp}</b><br>This OTP will expire in 10 minutes.");
 
             return RequestResult<bool>.Success(default, "Email sent with otp.");
