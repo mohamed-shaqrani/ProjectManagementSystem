@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Extensions;
+using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,18 +18,18 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
     public record LoginCommand(string Email, string Password) : IRequest<ResponseViewModel<AuthModel>>;
 
 
-    public class AuthanticationHandler : IRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>
+    public class AuthanticationHandler : BaseRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>
     {
         private IUnitOfWork _unitofwork;
 
         private JWT jwt;
-        public AuthanticationHandler(IUnitOfWork unitOfWork, IOptions<JWT> jwt)
+        public AuthanticationHandler(IUnitOfWork unitOfWork, IOptions<JWT> jwt,BaseRequestHandlerParam param) : base(param) 
         {
             _unitofwork = unitOfWork;
             this.jwt = jwt.Value;
         }
 
-        public async Task<ResponseViewModel<AuthModel>> Handle(LoginCommand loginCommand, CancellationToken token)
+        public override async Task<ResponseViewModel<AuthModel>> Handle(LoginCommand loginCommand, CancellationToken token)
         {
             var authModel = new AuthModel();
 
