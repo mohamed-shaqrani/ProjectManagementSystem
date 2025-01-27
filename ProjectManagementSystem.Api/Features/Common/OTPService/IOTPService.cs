@@ -3,8 +3,13 @@
     public interface IOTPService
     {
         string GenerateOTP();
+
         void SaveOTP(UserTempData user, string otp);
-        string GetTempUser(string email);
+        UserTempData GetTempUser(string email);
+
+      
+       
+
         Task<bool> IsOTPExpiredAsync(string email);
         Task<bool> VerifyOTPAsync(string email, string otp);
     }

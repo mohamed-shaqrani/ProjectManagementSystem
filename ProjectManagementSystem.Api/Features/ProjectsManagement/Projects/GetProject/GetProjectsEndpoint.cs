@@ -2,7 +2,7 @@
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
-using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
+using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject.Queries;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Response.Endpint;
 

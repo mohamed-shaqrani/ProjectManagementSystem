@@ -3,14 +3,13 @@ using MediatR;
 using PredicateExtensions;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
-using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.MappingProfiles;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 using System.Linq.Expressions;
 
-namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
+namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject.Queries;
 
 public record GetProjectsQuery(ProjectParam ProjectParam) : IRequest<RequestResult<PageList<ProjectResponseViewModel>>>;
 public class GetProjectsQueryHandler : BaseRequestHandler<GetProjectsQuery, RequestResult<PageList<ProjectResponseViewModel>>>

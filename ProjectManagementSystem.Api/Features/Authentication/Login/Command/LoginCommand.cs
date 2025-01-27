@@ -8,19 +8,16 @@ using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response;
-using ProjectManagementSystem.Api.Response.RequestResult;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
 {
-    public record LoginCommand(string Email,
-    string Password
-   ) : IRequest<ResponseViewModel<AuthanticationModel>>;
+    public record LoginCommand(string Email, string Password) : IRequest<ResponseViewModel<AuthModel>>;
 
 
-    public class AuthanticationHandler : IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>
+    public class AuthanticationHandler : IRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>
     {
         private IUnitOfWork _unitofwork;
 
@@ -31,16 +28,16 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
             this.jwt = jwt.Value;
         }
 
-        public async Task<ResponseViewModel<AuthanticationModel>> Handle(LoginCommand loginCommand, CancellationToken token)
+        public async Task<ResponseViewModel<AuthModel>> Handle(LoginCommand loginCommand, CancellationToken token)
         {
-            var authModel = new AuthanticationModel();
+            var authModel = new AuthModel();
 
 
             var user = await _unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
 
             if (user == null)
             {
-                return new FailureResponseViewModel<AuthanticationModel>(ErrorCode.UserNotFound);
+                return new FailureResponseViewModel<AuthModel>(ErrorCode.UserNotFound);
 
             }
 
@@ -56,10 +53,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
                 authModel.Email = user.Email;
                 authModel.UserName = user.Username;
 
-                return new SuccessResponseViewModel<AuthanticationModel>(SuccessCode.LoginCorrectly, authModel);
+                return new SuccessResponseViewModel<AuthModel>(SuccessCode.LoginCorrectly, authModel);
 
             }
-            return new FailureResponseViewModel<AuthanticationModel>(ErrorCode.IncorrectPassword);
+            return new FailureResponseViewModel<AuthModel>(ErrorCode.IncorrectPassword);
 
         }
 

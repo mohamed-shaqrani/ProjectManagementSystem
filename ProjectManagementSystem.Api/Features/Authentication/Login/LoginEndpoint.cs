@@ -16,7 +16,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
 
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthanticationModel>> LogiIn([FromBody] LoginViewModel model)
+        public async Task<EndpointResponse<AuthModel>> LogiIn([FromBody] LoginViewModel model)
         {
             var logincommand = new LoginCommand(model.Email, model.Password);
 
@@ -24,10 +24,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
 
             if (res.IsSuccess)
             {
-                return EndpointResponse<AuthanticationModel>.Success(res.Data, "Login Successfully");
+                return EndpointResponse<AuthModel>.Success(res.Data, "Login Successfully");
             }
 
-            return EndpointResponse<AuthanticationModel>.Failure(res.ErrorCode.Value, "Login Unsuccessfully");
+            return EndpointResponse<AuthModel>.Failure(res.ErrorCode.Value, "Login Unsuccessfully");
         }
     }
 }

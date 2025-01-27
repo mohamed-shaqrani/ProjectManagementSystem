@@ -1,11 +1,17 @@
-﻿namespace ProjectManagementSystem.Api.Features.Common
+﻿using ProjectManagementSystem.Api.Entities;
+
+namespace ProjectManagementSystem.Api.Features.Common
 {
     public class UserTempData
     {
-        string UserName { get; set; }
+      public  string UserName { get; set; }
 
-        string Password { get; set; }
+       public string Password { get; set; }
 
-        string Email { get; set; }
+       public string Email { get; set; }
+
+       public string Phone { get; set; }
+
+        public Role Role { get; set; }
     }
 }

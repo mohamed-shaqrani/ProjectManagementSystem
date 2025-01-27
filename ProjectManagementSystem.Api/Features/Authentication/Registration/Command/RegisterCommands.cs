@@ -1,39 +1,62 @@
 ﻿using HotelManagement.Service.PasswordHasherServices;
 using MediatR;
+using NETCore.MailKit.Core;
 using ProjectManagementSystem.Api.Entities;
+using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Features.Common.EmailService;
+using ProjectManagementSystem.Api.Features.Common.OTPService;
+using ProjectManagementSystem.Api.ImageService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Command
 {
-    public record RegisterCommand(string username, string email, string password) : IRequest<RequestResult<bool>>;
-    public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<bool>>
+    public record RegisterCommand(string username, string email, string password,  string phone) : IRequest<RequestResult<string>>;
+    public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<string>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork) : base(requestHandlerParam)
+    
+        private readonly IOTPService _otpService;
+        private readonly IEmailServices _emailService;
+
+        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork,IOTPService oTPService, IEmailServices emailService) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
+            
+            _otpService = oTPService;
+            _emailService = emailService;
         }
 
-        public override async Task<RequestResult<bool>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public override async Task<RequestResult<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
+            var authModel = new AuthModel();
+
             var repo = _unitOfWork.GetRepository<User>();
             var EmailAlreadyRegs = await repo.AnyAsync(u => u.Email == request.email);
 
             if (EmailAlreadyRegs)
             {
-                return RequestResult<bool>.Failure(Response.ErrorCode.UserEmailExist, "f");
+                return RequestResult<string>.Failure(Response.ErrorCode.UserEmailExist, "f");
             }
 
             var password = PasswordHasherService.HashPassord(request.password);
             var role = Role.User;
-            await repo.AddAsync(new User { Email = request.email, Password = password, Role = role, Username = request.username });
-            await _unitOfWork.SaveChangesAsync();
+            
+            var user = new UserTempData { Email = request.email, Password = password, Role = role, UserName = request.username, Phone = request.phone };
 
-            return RequestResult<bool>.Success(default, "s");
+
+            var otp = _otpService.GenerateOTP();
+
+            _otpService.SaveOTP(user, otp);
+            var body = $"Please use this code to verify your account \n {otp}";
+            _emailService.SendEmail(user.Email, "verification", body);
+            //to do send email with code to user email 
+
+            return RequestResult<string>.Success(user.Email, "s");
 
         }
+
     }
 }

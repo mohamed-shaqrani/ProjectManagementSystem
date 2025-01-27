@@ -2,7 +2,7 @@
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration;
 
-public record RegisterViewModel(string Email, string Password, string Username);
+public record RegisterViewModel(string Email, string Password, string Username,string phone);
 
 public class RegisterViewModelValidator : AbstractValidator<RegisterViewModel>
 {

@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagementSystem.Api.Features.Common.EmailService
 {
-    public interface IEmailService
+    public interface IEmailServices
     {
         void SendEmail(string to, string subject, string body);
     }

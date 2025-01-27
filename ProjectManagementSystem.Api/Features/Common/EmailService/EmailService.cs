@@ -3,22 +3,19 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using ProjectManagementSystem.Api.Features.Common.EmailService;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
+using MailKit.Security;
 
 
 namespace ProjectManagementSystem.Api.Features.Common.EmailServices
 {
-    public class EmailService : IEmailService
+    public class EmailService : IEmailServices
     {
         private readonly EmailConfiguration _emailConfig;
-        public EmailService(EmailConfiguration emailConfig)
+        public EmailService(IOptions< EmailConfiguration> emailConfig)
         {
             //_emailConfig = emailConfig;
-            _emailConfig = new EmailConfiguration();
-            _emailConfig.From = "userName@gmail.com";
-            _emailConfig.SmtpServer = "smtp.gmail.com";
-            _emailConfig.Port = 465;
-            _emailConfig.UserName = "userName@gmail.com";
-            _emailConfig.Password = "*************";
+            _emailConfig = emailConfig.Value;        
         }
 
         public void SendEmail(string to, string subject, string body)
@@ -48,10 +45,11 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
             {
                 try
                 {
-                    client.Connect(_emailConfig.SmtpServer, _emailConfig.Port, true);
+                    client.CheckCertificateRevocation = false;
+                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    
                     client.Authenticate(_emailConfig.UserName, _emailConfig.Password);
-
                     client.Send(mailMessage);
                 }
                 catch

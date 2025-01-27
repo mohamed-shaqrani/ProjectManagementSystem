@@ -3,6 +3,7 @@ using FluentValidation;
 using HotelManagement.Core.ViewModels.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using ProjectManagementSystem.Api.Features.Authentication.ForgetPassword.Commands;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Authentication.Registration.Command;
@@ -10,11 +11,9 @@ using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.Users;
 using ProjectManagementSystem.Api.Features.Common.Users.Queries;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
-using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject;
-using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Commands;
+using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject.Queries;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Repository;
-using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Config;
 
@@ -25,33 +24,43 @@ public class AutofacModule : Module
         builder.RegisterAssemblyTypes(typeof(IMediator).Assembly)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
         builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
 
         builder.RegisterGeneric(typeof(BaseEndpointParam<>))
-             .AsSelf()
-             .InstancePerLifetimeScope();
+                .AsSelf()
+                .InstancePerLifetimeScope();
+
+        builder.RegisterAssemblyTypes(ThisAssembly)
+      .AsClosedTypesOf(typeof(IValidator<>))
+      .InstancePerLifetimeScope();
 
 
         builder.RegisterAssemblyTypes(typeof(AddProjectHandler).Assembly);
-        builder.RegisterType<AddProjectHandler>()
-             .As<IRequestHandler<AddProjectCommand, RequestResult<bool>>>()
-             .InstancePerLifetimeScope();
+        builder.RegisterAssemblyTypes(typeof(GetProjectsQuery).Assembly);
 
-        builder.RegisterAssemblyTypes(typeof(RegisterHandler).Assembly);
-
-        builder.RegisterType<RegisterHandler>()
-          .As<IRequestHandler<RegisterCommand, RequestResult<bool>>>()
-          .InstancePerLifetimeScope();
+        // Register all handlers in the assembly
+        builder.RegisterAssemblyTypes(typeof(AddProjectHandler).Assembly)
+                .Where(x => x.Name.EndsWith("Handler")).AsImplementedInterfaces().InstancePerLifetimeScope();
 
 
 
-        builder.RegisterType<AddTaskCommandHandler>()
-             .As<IRequestHandler<AddTaskCommand, RequestResult<bool>>>()
-             .InstancePerLifetimeScope();
+        // Register all handlers in the assembly
+        builder.RegisterAssemblyTypes(typeof(RegisterHandler).Assembly)
+               .Where(t => t.Name.EndsWith("Handler"))
+               .AsClosedTypesOf(typeof(IRequestHandler<,>))
+               .InstancePerLifetimeScope();
+
+
+
+        builder.RegisterAssemblyTypes(typeof(ImageService.ImageService).Assembly)
+          .Where(a => a.Name.EndsWith("Service"))
+          .AsImplementedInterfaces().InstancePerLifetimeScope();
+
 
         builder.RegisterType<AuthanticationHandler>()
-            .As<IRequestHandler<LoginCommand, ResponseViewModel<AuthanticationModel>>>()
+            .As<IRequestHandler<LoginCommand, ResponseViewModel < AuthModel >>> ()
             .InstancePerLifetimeScope();
 
         builder.RegisterType<IsUserExistQueryHandler>()
@@ -61,21 +70,24 @@ public class AutofacModule : Module
         builder.RegisterType<GetUserByIDQueryHandler>()
              .As<IRequestHandler<GetUserByIDQuery, UserDTO>>()
              .InstancePerLifetimeScope();
+
         builder.RegisterType<ProjectAuthorizeHandler>()
               .As<IAuthorizationHandler>()
               .InstancePerDependency();
 
+
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
 
-        builder.RegisterType<GetProjectsQueryHandler>()
-             .As<IRequestHandler<GetProjectsQuery, RequestResult<PageList<ProjectResponseViewModel>>>>()
-             .InstancePerLifetimeScope();
+       
+
+
 
         builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
         builder.RegisterAssemblyTypes(ThisAssembly)
         .AsClosedTypesOf(typeof(IValidator<>))
         .InstancePerLifetimeScope();
+
 
 
     }
