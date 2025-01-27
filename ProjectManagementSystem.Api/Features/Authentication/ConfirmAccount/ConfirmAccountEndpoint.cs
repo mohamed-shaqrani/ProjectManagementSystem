@@ -15,9 +15,9 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount
 
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthModel>> Register([FromForm] string email, int code)
+        public async Task<EndpointResponse<AuthModel>> Register([FromBody] ConfirmAccountViewModel model)
         {
-            var register = new ConfirmAccountCommand(email, code);
+            var register = new ConfirmAccountCommand( model.code);
 
             var res = await _mediator.Send(register);
 
