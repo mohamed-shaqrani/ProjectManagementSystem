@@ -14,7 +14,6 @@ namespace ProjectManagementSystem.Api.Helpers
         public ProjectAuthorizeHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            contextAccessor = accessor;
         }
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ProjectAdminRequirement requirement)
@@ -48,4 +47,5 @@ namespace ProjectManagementSystem.Api.Helpers
 
         }
     }
+}
 

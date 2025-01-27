@@ -1,9 +1,8 @@
-﻿using MailKit.Net.Smtp;
-using MimeKit;
-using ProjectManagementSystem.Api.Features.Common.EmailService;
-using System.Net.Mail;
+﻿using MailKit.Security;
 using Microsoft.Extensions.Options;
-using MailKit.Security;
+using MimeKit;
+using ProjectManagementSystem.Api.Config;
+using ProjectManagementSystem.Api.Features.Common.EmailService;
 
 
 namespace ProjectManagementSystem.Api.Features.Common.EmailServices
@@ -11,10 +10,10 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
     public class EmailService : IEmailServices
     {
         private readonly EmailConfiguration _emailConfig;
-        public EmailService(IOptions< EmailConfiguration> emailConfig)
+        public EmailService(IOptions<EmailConfiguration> emailConfig)
         {
             //_emailConfig = emailConfig;
-            _emailConfig = emailConfig.Value;        
+            _emailConfig = emailConfig.Value;
         }
 
         public void SendEmail(string to, string subject, string body)
@@ -47,7 +46,7 @@ namespace ProjectManagementSystem.Api.Features.Common.EmailServices
                     client.CheckCertificateRevocation = false;
                     client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    
+
                     client.Authenticate(_emailConfig.UserName, _emailConfig.Password);
                     client.Send(mailMessage);
                 }
