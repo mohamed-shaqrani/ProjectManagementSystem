@@ -35,13 +35,6 @@ public static class ResponseMessage
         { ErrorCode.UserNameExist, "The specified username is already in use." },
         { ErrorCode.UserEmailExist, "The specified Email is already in use." },
         { ErrorCode.UserPhoneExist, "The specified Phone is already in use." },
-        
-
-        // Room
-        { ErrorCode.RoomNameIsRequired, "The room Name is required." },
-        { ErrorCode.RoomDescriptionIsRequired, "The room Description is required." },
-        { ErrorCode.RoomAlreadyExists, "There is a room with the specified Name." },
-        { ErrorCode.RoomIDNotExist, "There is no room with the specified ID." },
 
 
     };

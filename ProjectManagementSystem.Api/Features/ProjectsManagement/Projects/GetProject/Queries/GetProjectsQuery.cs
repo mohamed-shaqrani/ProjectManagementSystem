@@ -24,20 +24,24 @@ public class GetProjectsQueryHandler : BaseRequestHandler<GetProjectsQuery, Requ
     {
         var predicate = BuildPredicate(request);
 
-        var result2 = from p in _unitOfWork.GetRepository<Project>().GetAll(predicate)
-                      join t in _unitOfWork.GetRepository<ProjectTask>().GetAll() on p.Id equals t.ProjectId
-                      group t by new { p.Title, p.Status, p.CreatedAt } into g
-                      select new ProjectResponseViewModel
-                      {
-                          Title = g.Key.Title,
-                          Status = g.Key.Status,
-                          NumTasks = g.Count(),
-                          NumOfUsers = g.Select(t => t.UserID).Distinct().Count(),
-                          DateCreated = g.Key.CreatedAt
-                      };
+
+        var query = from p in _unitOfWork.GetRepository<Project>().GetAll(predicate)
+                    join t in _unitOfWork.GetRepository<ProjectTask>().GetAll() on p.Id equals t.ProjectId into ptGroup
+                    from t in ptGroup.DefaultIfEmpty()
+                    join u in _unitOfWork.GetRepository<User>().GetAll() on t.UserID equals u.Id into tuGroup
+                    from u in tuGroup.DefaultIfEmpty()
+                    group new { p, t, u } by new { p.Id, p.Title } into g
+                    select new ProjectResponseViewModel
+                    {
+                        ProjectId = g.Key.Id,
+                        Title = g.Key.Title,
+                        NumTasks = g.Count(x => x.t != null),
+                        NumOfUsers = g.Where(x => x.t != null && x.u != null).Select(x => x.u.Id).Distinct().Count(),
+                        DateCreated = g.First().p.CreatedAt
+                    };
 
 
-        var paginatedResult = await PageList<ProjectResponseViewModel>.CreateAsync(result2, request.ProjectParam.PageNumber, request.ProjectParam.PageSize);
+        var paginatedResult = await PageList<ProjectResponseViewModel>.CreateAsync(query, 1, 10);
 
         return RequestResult<PageList<ProjectResponseViewModel>>.Success(paginatedResult, "success");
     }

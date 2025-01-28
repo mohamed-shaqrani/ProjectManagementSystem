@@ -18,10 +18,7 @@ public enum ErrorCode
     UserPhoneExist = 203,
     InvalidCode = 204,
 
+    // Project
+    ProjectExist = 301,
 
-    //Room
-    RoomNameIsRequired = 300,
-    RoomDescriptionIsRequired = 301,
-    RoomAlreadyExists = 302,
-    RoomIDNotExist = 303,
 }

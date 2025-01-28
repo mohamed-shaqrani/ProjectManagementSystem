@@ -3,9 +3,8 @@
 public class ProjectParam
 {
     private const int MaxPageSize = 30;
-    private int _pageSize = 50;
-    private int _pageNumber = 1;
-
+    private int _pageSize = 5;
+    private int _pageNumber = 10;
     public int PageNumber
     {
         get => _pageNumber;

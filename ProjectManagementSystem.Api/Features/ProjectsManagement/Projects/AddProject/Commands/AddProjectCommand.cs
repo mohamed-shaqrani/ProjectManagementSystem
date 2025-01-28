@@ -2,6 +2,7 @@
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Repository;
+using ProjectManagementSystem.Api.Response;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
@@ -17,6 +18,12 @@ public class AddProjectHandler : BaseRequestHandler<AddProjectCommand, RequestRe
     }
     public override async Task<RequestResult<bool>> Handle(AddProjectCommand request, CancellationToken cancellationToken)
     {
+        var checkProject = await _unitOfWork.GetRepository<Project>().AnyAsync(x => x.Title == request.Title);
+
+        if (checkProject)
+            return RequestResult<bool>.Failure(ErrorCode.ProjectExist, "Project already exists");
+
+
         var project = new Project
         {
             CreatedAt = DateTime.UtcNow,
