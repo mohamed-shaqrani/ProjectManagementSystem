@@ -1,6 +1,5 @@
 ﻿using HotelManagement.Service.PasswordHasherServices;
 using MediatR;
-using NETCore.MailKit.Core;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Authentication.Login;
 using ProjectManagementSystem.Api.Features.Common;
@@ -12,21 +11,23 @@ using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Command
 {
-    public record RegisterCommand(string username, string email, string password,  string phone) : IRequest<RequestResult<string>>;
+    public record RegisterCommand(string username, string email, string password, string phone, IFormFile imageFile) : IRequest<RequestResult<string>>;
     public class RegisterHandler : BaseRequestHandler<RegisterCommand, RequestResult<string>>
     {
 
         private readonly IUnitOfWork _unitOfWork;
-    
+        private readonly IImageService _imageService;
+
         private readonly IOTPService _otpService;
         private readonly IEmailServices _emailService;
 
-        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork,IOTPService oTPService, IEmailServices emailService) : base(requestHandlerParam)
+        public RegisterHandler(BaseRequestHandlerParam requestHandlerParam, IUnitOfWork unitOfWork, IOTPService oTPService, IEmailServices emailService, IImageService imageService) : base(requestHandlerParam)
         {
             _unitOfWork = unitOfWork;
-            
+
             _otpService = oTPService;
             _emailService = emailService;
+            _imageService = imageService;
         }
 
         public override async Task<RequestResult<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -43,8 +44,8 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
 
             var password = PasswordHasherService.HashPassord(request.password);
             var role = Role.User;
-            
-            var user = new UserTempData { Email = request.email, Password = password, Role = role, UserName = request.username, Phone = request.phone };
+            var imagePath = await _imageService.UploadImage(request.imageFile, "users");
+            var user = new UserTempData { Email = request.email, Password = password, Role = role, UserName = request.username, Phone = request.phone, ImagePath = imagePath };
 
 
             var otp = _otpService.GenerateOTP();
