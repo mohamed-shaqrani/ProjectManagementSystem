@@ -7,7 +7,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword
     {
         public ForgetPassRequestViewModelValidator()
         {
-            RuleFor(x => x.Email).NotEmpty().WithMessage("Not empty");
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
         }
     }
 }

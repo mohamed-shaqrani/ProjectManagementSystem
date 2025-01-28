@@ -16,8 +16,12 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
 
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthModel>> LogiIn([FromBody] LoginViewModel model)
+        public async Task<EndpointResponse<AuthModel>> Login([FromBody] LoginViewModel model)
         {
+            var validationResult = ValidateRequest(model);
+            if (!validationResult.IsSuccess)
+                return EndpointResponse<AuthModel>.Failure(validationResult.ErrorCode, validationResult.Message);
+
             var logincommand = new LoginCommand(model.Email, model.Password);
 
             var res = await _mediator.Send(logincommand);
