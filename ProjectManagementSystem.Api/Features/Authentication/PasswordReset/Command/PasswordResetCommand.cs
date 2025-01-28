@@ -7,7 +7,7 @@ using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
-namespace ProjectManagementSystem.Api.Features.Authentication.PasswordReset.PasswordReset.Command;
+namespace ProjectManagementSystem.Api.Features.Authentication.PasswordReset.Command;
 
 public record PasswordResetCommand(string Email, string NewPassword, string OTP) : IRequest<RequestResult<bool>>;
 
