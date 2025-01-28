@@ -50,9 +50,9 @@ public class PasswordResetCommandHandler : BaseRequestHandler<PasswordResetComma
 
     private Task<RequestResult<bool>> ValidateRequest(PasswordResetCommand request)
     {
-        var savedOTP = _OTPService.GetTempUser(request.OTP);
+        var savedOTP = _OTPService.GetOTP(request.Email);
 
-        if (savedOTP is null)
+        if (savedOTP is null || savedOTP != request.OTP)
         {
             return Task.FromResult(RequestResult<bool>.Failure(default, "Invalid OTP"));
         }
