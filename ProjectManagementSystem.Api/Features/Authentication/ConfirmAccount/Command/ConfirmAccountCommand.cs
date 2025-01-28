@@ -56,6 +56,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount.com
                 Username = Tempuser.UserName,
                 Role = Tempuser.Role,
                 Phone = Tempuser.Phone,
+                ImagePath = Tempuser.ImagePath,
             };
 
             var repo = _unitOfWork.GetRepository<User>();

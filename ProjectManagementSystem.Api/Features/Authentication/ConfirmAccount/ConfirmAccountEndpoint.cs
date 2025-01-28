@@ -6,7 +6,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount
 {
-    [Route("api/confirm")]
+    [Route("api/confirm-account")]
     public class ConfirmAccountEndpoint : BaseEndpoint<ConfirmAccountViewModel, EndpointResponse<string>>
     {
         public ConfirmAccountEndpoint(BaseEndpointParam<ConfirmAccountViewModel> param) : base(param)
@@ -17,7 +17,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount
 
         public async Task<EndpointResponse<AuthModel>> Register([FromBody] ConfirmAccountViewModel model)
         {
-            var register = new ConfirmAccountCommand( model.code);
+            var register = new ConfirmAccountCommand(model.code);
 
             var res = await _mediator.Send(register);
 
