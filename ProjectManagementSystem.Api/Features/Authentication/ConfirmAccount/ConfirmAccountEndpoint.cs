@@ -6,7 +6,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount
 {
-    [Route("api/confirm-account")]
+    [Route("api/auth/confirm-account")]
     public class ConfirmAccountEndpoint : BaseEndpoint<ConfirmAccountViewModel, EndpointResponse<string>>
     {
         public ConfirmAccountEndpoint(BaseEndpointParam<ConfirmAccountViewModel> param) : base(param)

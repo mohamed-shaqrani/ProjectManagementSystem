@@ -8,7 +8,7 @@ public class RegisterViewModelValidator : AbstractValidator<RegisterViewModel>
 {
     public RegisterViewModelValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("Not empty");
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
 
         RuleFor(x => x.Password).NotEmpty()
             .MinimumLength(7).WithMessage("Password must be at least 7 characters long.")
@@ -17,7 +17,7 @@ public class RegisterViewModelValidator : AbstractValidator<RegisterViewModel>
             .Must(ContainSmallLetter).WithMessage("Password must contain at least one small letter.");
 
         RuleFor(x => x.Username).NotEmpty().MinimumLength(2).WithMessage(" must be at least 2 characters long. ");
-        //      RuleFor(x => x.imageFile.Length > 0);
+        RuleFor(x => x.imageFile.Length > 0);
     }
     private bool ContainSpecialCharacter(string arg)
     {

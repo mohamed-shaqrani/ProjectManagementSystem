@@ -5,7 +5,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ResetPassword;
 
-[Route("api/auth/resetpassword/")]
+[Route("api/auth/reset-password")]
 public class PasswordResetEndpoint : BaseEndpoint<PasswordResetViewModel, bool>
 {
     public PasswordResetEndpoint(BaseEndpointParam<PasswordResetViewModel> param) : base(param)
@@ -18,7 +18,7 @@ public class PasswordResetEndpoint : BaseEndpoint<PasswordResetViewModel, bool>
         var command = new PasswordResetCommand(param.Email, param.NewPassword, param.OTP);
         var result = await _mediator.Send(command);
 
-        return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty, "Email Sent with OTP verification code")
-                         : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
+        return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty, result.Message)
+                                : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
     }
 }

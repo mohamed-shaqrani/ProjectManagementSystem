@@ -34,21 +34,25 @@ public class PasswordResetCommandHandler : BaseRequestHandler<PasswordResetComma
             return response;
 
         var userid = await _unitOfWork.GetRepository<User>()
-            .GetAll(u => u.Email == request.Email)
-            .Select(u => u.Id)
-            .FirstOrDefaultAsync();
+                                    .GetAll(u => u.Email == request.Email)
+                                    .Select(u => u.Id)
+                                    .FirstOrDefaultAsync();
 
+        var user = new User { Id = userid, Password = request.NewPassword };
         var newPassword = PasswordHasherService.HashPassord(request.NewPassword);
-        _unitOfWork.GetRepository<User>().SaveInclude(new User { Id = userid, Password = newPassword });
 
-        return RequestResult<bool>.Success(default, "Password reset successful");
+        _unitOfWork.GetRepository<User>().SaveInclude(user, a => a.Password);
+        await _unitOfWork.SaveChangesAsync();
+
+
+        return RequestResult<bool>.Success(default, "Password has been changed successfully");
     }
 
     private Task<RequestResult<bool>> ValidateRequest(PasswordResetCommand request)
     {
-        var savedOTP = _OTPService.GetOTP(request.Email);
+        var savedOTP = _OTPService.GetTempUser(request.OTP);
 
-        if (string.IsNullOrEmpty(savedOTP) || !savedOTP.Equals(request.OTP))
+        if (savedOTP is null)
         {
             return Task.FromResult(RequestResult<bool>.Failure(default, "Invalid OTP"));
         }

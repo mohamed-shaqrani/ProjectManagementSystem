@@ -5,7 +5,7 @@
         string GenerateOTP();
 
         void SaveOTP(UserTempData user, string otp);
-        UserTempData GetTempUser(string email);
+        UserTempData GetTempUser(string otp);
         string GetOTP(string email);
         Task<bool> IsOTPExpiredAsync(string email);
         Task<bool> VerifyOTPAsync(string email, string otp);

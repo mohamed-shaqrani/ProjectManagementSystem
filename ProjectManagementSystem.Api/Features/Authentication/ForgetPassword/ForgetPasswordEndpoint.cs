@@ -5,7 +5,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword
 {
-    [Route("api/auth/forget/")]
+    [Route("api/auth/forget-password/")]
     public class ForgetPasswordEndpoint : BaseEndpoint<ForgetPassRequestViewModel, string>
     {
         public ForgetPasswordEndpoint(BaseEndpointParam<ForgetPassRequestViewModel> param) : base(param)

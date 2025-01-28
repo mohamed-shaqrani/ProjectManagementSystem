@@ -5,7 +5,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Login
 {
-    [Route("api/Login/")]
+    [Route("api/auth/login")]
     public class LoginEndpoint : BaseEndpoint<LoginViewModel, LoginViewModel>
     {
         public LoginEndpoint(BaseEndpointParam<LoginViewModel> param) : base(param)
