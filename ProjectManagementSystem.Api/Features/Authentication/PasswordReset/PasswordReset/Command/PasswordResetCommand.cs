@@ -38,8 +38,8 @@ public class PasswordResetCommandHandler : BaseRequestHandler<PasswordResetComma
                                     .Select(u => u.Id)
                                     .FirstOrDefaultAsync();
 
-        var user = new User { Id = userid, Password = request.NewPassword };
         var newPassword = PasswordHasherService.HashPassord(request.NewPassword);
+        var user = new User { Id = userid, Password = newPassword };
 
         _unitOfWork.GetRepository<User>().SaveInclude(user, a => a.Password);
         await _unitOfWork.SaveChangesAsync();

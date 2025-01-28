@@ -39,7 +39,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
 
             if (EmailAlreadyRegs)
             {
-                return RequestResult<string>.Failure(Response.ErrorCode.UserEmailExist, "f");
+                return RequestResult<string>.Failure(Response.ErrorCode.UserEmailExist, "Email already exists");
             }
 
             var password = PasswordHasherService.HashPassord(request.password);
@@ -55,7 +55,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
             _emailService.SendEmail(user.Email, "verification", body);
             //to do send email with code to user email 
 
-            return RequestResult<string>.Success(user.Email, "s");
+            return RequestResult<string>.Success(user.Email, "Verification code has been sent to your email");
 
         }
 

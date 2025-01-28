@@ -26,10 +26,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration
 
             if (res.IsSuccess)
             {
-                return EndpointResponse<string>.Success(res.Data, "Register Successfully");
+                return EndpointResponse<string>.Success(res.Data, res.Message);
             }
 
-            return EndpointResponse<string>.Failure(res.ErrorCode, "Register Unsuccessfully");
+            return EndpointResponse<string>.Failure(res.ErrorCode, res.Message);
         }
     }
 }
