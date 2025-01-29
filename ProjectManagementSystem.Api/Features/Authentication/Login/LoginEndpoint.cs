@@ -31,7 +31,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
                 return EndpointResponse<AuthModel>.Success(res.Data, "Login Successfully");
             }
 
-            return EndpointResponse<AuthModel>.Failure(res.ErrorCode.Value, "Login Unsuccessfully");
+            return EndpointResponse<AuthModel>.Failure(res.ErrorCode.Value, res.Message);
         }
     }
 }

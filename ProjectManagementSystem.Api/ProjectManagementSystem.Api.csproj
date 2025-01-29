@@ -42,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\ProjectsManagement\Projects\AddProject\Queries\" />
     <Folder Include="Features\TasksManagement\Tasks\AddTask\Queries\" />
     <Folder Include="wwwroot\Assets\Images\users\" />
   </ItemGroup>

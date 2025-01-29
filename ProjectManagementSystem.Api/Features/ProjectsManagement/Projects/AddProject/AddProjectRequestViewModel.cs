@@ -5,9 +5,9 @@ namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddPr
 
 public record AddProjectRequestViewModel(string Title, ProjectStatus Status);
 
-public class AddRoomRequestViewModelValidator : AbstractValidator<AddProjectRequestViewModel>
+public class AddProjectRequestViewModelValidator : AbstractValidator<AddProjectRequestViewModel>
 {
-    public AddRoomRequestViewModelValidator()
+    public AddProjectRequestViewModelValidator()
     {
         RuleFor(x => x.Title).NotEmpty().WithMessage("Not empty");
     }
