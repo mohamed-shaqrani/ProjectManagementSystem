@@ -20,5 +20,6 @@ public enum ErrorCode
 
     // Project
     ProjectExist = 301,
+    ProjectNotExist =302,
 
 }
