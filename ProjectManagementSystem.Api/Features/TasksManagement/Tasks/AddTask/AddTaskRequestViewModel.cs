@@ -3,7 +3,7 @@ using ProjectManagementSystem.Api.Entities;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
 {
-    public record AddTaskRequestViewModel(string Title, string Description, ProjectTaskStatus Status, int UserID);
+    public record AddTaskRequestViewModel(string Title, string Description, ProjectTaskStatus Status, int ProjectId);
 
     public class AddTaskRequestViewModelValidator : AbstractValidator<AddTaskRequestViewModel>
     {

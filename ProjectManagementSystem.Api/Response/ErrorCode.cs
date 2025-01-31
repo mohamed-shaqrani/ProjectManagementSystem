@@ -18,6 +18,10 @@ public enum ErrorCode
     UserPhoneExist = 203,
     InvalidCode = 204,
 
+    // Project
+
+    ProjectExist = 401,
+    ProjectNotFound = 402,
 
     //Room
     RoomNameIsRequired = 300,

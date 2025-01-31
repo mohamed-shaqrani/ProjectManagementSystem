@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Api.Entities;
+using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Repository;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace ProjectManagementSystem.Api.Helpers
 {
@@ -18,32 +20,51 @@ namespace ProjectManagementSystem.Api.Helpers
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ProjectAdminRequirement requirement)
         {
-            var UserRepo = _unitOfWork.GetRepository<User>();
-            var UserEmail = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
-            var UserEmailValue = UserEmail?.Value;
-            if (UserEmailValue == null)
-            {
-                return;
-            }
 
-            var user = await UserRepo.GetAll(u => u.Email == UserEmailValue).FirstOrDefaultAsync();
-            if (user is null)
+            
+            if (context.Resource is HttpContext httpContext) 
             {
-                return;
-            }
+                httpContext.Request.EnableBuffering();
 
-            var UserRolesRepo = _unitOfWork.GetRepository<ProjectUserRoles>();
-            var ProjectId = context.Resource as int?;
-            if (ProjectId is null)
-            {
-                return;
-            }
-            var Any = await UserRolesRepo.AnyAsync(up => up.UserId == user.Id && up.ProjectId == ProjectId && up.Role == Role.Admin);
+                using (var stream = new StreamReader(httpContext.Request.Body)) 
+                {
+                    var body = await stream.ReadToEndAsync();
+                    var json = JsonSerializer.Deserialize<BaseCommand>(body);
 
-            if (!Any)
-            {
-                context.Succeed(requirement);
+                    if(json is not null) 
+                    {
+                        var projectid = json.ProjectId;
+                        var UserRepo = _unitOfWork.GetRepository<User>();
+                        var UserEmail = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+                        var UserEmailValue = UserEmail?.Value;
+                        if (UserEmailValue == null)
+                        {
+                            return;
+                        }
+
+                        var user = await UserRepo.GetAll(u => u.Email == UserEmailValue).FirstOrDefaultAsync();
+                        if (user is null)
+                        {
+                            return;
+                        }
+
+                        var UserRolesRepo = _unitOfWork.GetRepository<ProjectUserRoles>();
+                        var ProjectId = context.Resource as int?;
+                        if (ProjectId is null)
+                        {
+                            return;
+                        }
+                        var Any = await UserRolesRepo.AnyAsync(up => up.UserId == user.Id && up.ProjectId == ProjectId && up.Role == Role.Admin);
+
+                        if (Any)
+                        {
+                            context.Succeed(requirement);
+                        }
+
+                    }
+                }
             }
+            
 
         }
     }

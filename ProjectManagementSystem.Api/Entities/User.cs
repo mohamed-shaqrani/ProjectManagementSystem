@@ -12,7 +12,7 @@ public class User : BaseEntity
     public string ImagePath { get; set; } = string.Empty;
 
   
-    public bool IsAuthenticated { get; set; }
+    
 
   
 
