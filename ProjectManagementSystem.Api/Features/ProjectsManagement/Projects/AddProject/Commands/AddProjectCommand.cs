@@ -29,12 +29,13 @@ public class AddProjectHandler : BaseRequestHandler<AddProjectCommand, RequestRe
         };
         var userid = await _gettingUserIdService.GettingUserId();
         await _unitOfWork.GetRepository<Project>().AddAsync(project);
+        await _unitOfWork.SaveChangesAsync();
         var save =  await _mediator.Send(new UserRolesCommand(project.Id, userid, Role.Admin));
         if (!save.IsSuccess) 
         {
             return RequestResult<bool>.Failure(Response.ErrorCode.ProjectExist, "Project already exist");
         }
-        await _unitOfWork.SaveChangesAsync();
+        
         return RequestResult<bool>.Success(default, "Success");
     }
 }
