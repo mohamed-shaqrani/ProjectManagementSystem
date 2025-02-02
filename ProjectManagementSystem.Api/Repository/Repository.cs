@@ -106,7 +106,18 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEnti
                 propertyEntry.IsModified = true;
         }
     }
+    public void ClearedTrackedChanges(TEntity entity)
+    {
+        var local = _dbSet.Local.FirstOrDefault(e => e.Id == entity.Id);
 
+        if (local is not null)
+        {
+            _dbSet.Entry(local).State = EntityState.Detached;
+        }
+
+
+
+    }
     public void SaveIncludeRange(IEnumerable<TEntity> entities, params Expression<Func<TEntity, object>>[] propertyExpressions)
     {
         foreach (var entity in entities)

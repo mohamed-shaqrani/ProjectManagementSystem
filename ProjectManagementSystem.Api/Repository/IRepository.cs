@@ -20,7 +20,7 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
     void DeleteRange(IEnumerable<TEntity> entities);
     void Undelete(TEntity entity);
     void HardDelete(TEntity entity);
-
+    void ClearedTrackedChanges(TEntity entity);
     public IQueryable<TEntity> GetAllWithInclude(Func<IQueryable<TEntity>, IQueryable<TEntity>> Expr);
     Task<bool> DoesEntityExistAsync(int id);
     Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);

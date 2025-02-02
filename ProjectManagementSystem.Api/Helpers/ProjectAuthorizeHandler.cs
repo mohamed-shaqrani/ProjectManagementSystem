@@ -4,6 +4,7 @@ using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Repository;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 
 namespace ProjectManagementSystem.Api.Helpers
@@ -26,11 +27,16 @@ namespace ProjectManagementSystem.Api.Helpers
             {
                 httpContext.Request.EnableBuffering();
 
-                using (var stream = new StreamReader(httpContext.Request.Body)) 
-                {
-                    var body = await stream.ReadToEndAsync();
-                    var json = JsonSerializer.Deserialize<BaseCommand>(body);
 
+                var reader = await httpContext.Request.BodyReader.ReadAsync();
+                var body = reader.Buffer;
+                var bodyconverter = Encoding.UTF8.GetString(body);
+                
+                    
+                    
+                    
+                    var json = JsonSerializer.Deserialize<BaseCommand>(bodyconverter);
+                 httpContext.Request.Body.Position = 0;
                     if(json is not null) 
                     {
                         var projectid = json.ProjectId;
@@ -49,8 +55,8 @@ namespace ProjectManagementSystem.Api.Helpers
                         }
 
                         var UserRolesRepo = _unitOfWork.GetRepository<ProjectUserRoles>();
-                        var ProjectId = context.Resource as int?;
-                        if (ProjectId is null)
+                        var ProjectId = json.ProjectId ;
+                        if (ProjectId <0)
                         {
                             return;
                         }
@@ -68,5 +74,5 @@ namespace ProjectManagementSystem.Api.Helpers
 
         }
     }
-}
+
 

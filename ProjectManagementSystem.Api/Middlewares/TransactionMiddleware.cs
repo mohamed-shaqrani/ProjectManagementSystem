@@ -19,10 +19,27 @@ public class TransactionMiddleware
     public async Task InvokeAsync(HttpContext httpContent,AppDbContext appDb)
     {
         IDbContextTransaction transaction = null;
+        
         try
         {
+            Console.WriteLine("[DEBUG] TransactionMiddleware invoked");
+
+            
+            httpContent.Request.EnableBuffering();
             transaction = await _appDbContext.Database.BeginTransactionAsync();
+            if (httpContent.Request.Body.CanSeek)
+            {
+                httpContent.Request.Body.Position = 0;
+            }
+
+             
+            
             await _next.Invoke(httpContent);
+            if (httpContent.Request.Body.CanSeek)
+            {
+                httpContent.Request.Body.Position = 0;
+            }
+
             await transaction.CommitAsync();
         }
         catch (Exception ex)

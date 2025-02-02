@@ -6,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Api.Config;
 using ProjectManagementSystem.Api.Data;
 using ProjectManagementSystem.Api.Extensions;
+using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.MappingProfiles;
 using ProjectManagementSystem.Api.Middlewares;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +69,24 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 MappingExtensions.Mapper = app.Services.GetRequiredService<IMapper>();
+
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+       
+        
+        Console.WriteLine($"[DEBUG] Request Body in Debug Middleware: ");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[DEBUG] Error reading body in middleware: {ex.Message}");
+    }
+
+    await next();
+});
+
 
 app.UseAuthorization();
 #region Custom Middleware
