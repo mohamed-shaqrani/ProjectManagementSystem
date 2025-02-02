@@ -71,21 +71,7 @@ app.UseStaticFiles();
 MappingExtensions.Mapper = app.Services.GetRequiredService<IMapper>();
 
 
-app.Use(async (context, next) =>
-{
-    try
-    {
-       
-        
-        Console.WriteLine($"[DEBUG] Request Body in Debug Middleware: ");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"[DEBUG] Error reading body in middleware: {ex.Message}");
-    }
 
-    await next();
-});
 
 
 app.UseAuthorization();
