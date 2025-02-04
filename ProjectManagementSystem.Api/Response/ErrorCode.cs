@@ -20,6 +20,12 @@ public enum ErrorCode
 
     // Project
     ProjectExist = 301,
+    ProjectNotExist =302,
+
+
+    // Task
+    TaskNotExist = 401,
+
     ProjectDoesNotExist = 302,
 
     ProjectHasTasks = 303,

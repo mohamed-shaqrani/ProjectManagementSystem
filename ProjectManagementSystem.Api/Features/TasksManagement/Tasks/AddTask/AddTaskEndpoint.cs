@@ -15,7 +15,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
         [HttpPost]
         public async Task<EndpointResponse<AddTaskResponseViewModel>> CreateAsync([FromBody] AddTaskRequestViewModel viewModel)
         {
-            var result = await _mediator.Send(new AddTaskCommand(viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID));
+            var result = await _mediator.Send(new AddTaskCommand(viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID, viewModel.ProjectID));
 
             return result.IsSuccess ? EndpointResponse<AddTaskResponseViewModel>
                                                     .Success(new AddTaskResponseViewModel
