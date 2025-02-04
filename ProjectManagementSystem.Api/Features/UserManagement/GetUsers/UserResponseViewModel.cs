@@ -1,4 +1,4 @@
-﻿namespace ProjectManagementSystem.Api.Features.UserManagement;
+﻿namespace ProjectManagementSystem.Api.Features.UserManagement.GetUsers;
 
 public class UserResponseViewModel
 {

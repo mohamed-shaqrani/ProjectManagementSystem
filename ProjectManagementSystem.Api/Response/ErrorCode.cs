@@ -16,7 +16,7 @@ public enum ErrorCode
     UserEmailNotExist = 603,
     UserPhoneExist = 604,
     InvalidCode = 605,
-
+    UserAlreadyDeactivated = 606,
     // Project
     ProjectExist = 700,
     ProjectNotExist = 701,

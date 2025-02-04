@@ -9,7 +9,7 @@ using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
 using System.Linq.Expressions;
 
-namespace ProjectManagementSystem.Api.Features.UserManagement.Queries;
+namespace ProjectManagementSystem.Api.Features.UserManagement.GetUsers.Queries;
 
 public record GetUsersQuery(UserParam UserParam) : IRequest<RequestResult<PageList<UserResponseViewModel>>>;
 public class GetUsersHandler : BaseRequestHandler<GetUsersQuery, RequestResult<PageList<UserResponseViewModel>>>

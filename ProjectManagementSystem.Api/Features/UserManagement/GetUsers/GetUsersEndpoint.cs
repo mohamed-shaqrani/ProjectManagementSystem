@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
-using ProjectManagementSystem.Api.Features.UserManagement.Queries;
+using ProjectManagementSystem.Api.Features.UserManagement.GetUsers.Queries;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Response.Endpint;
 
-namespace ProjectManagementSystem.Api.Features.UserManagement;
+namespace ProjectManagementSystem.Api.Features.UserManagement.GetUsers;
 
 [Route("api/user/")]
 public class GetUsersEndpoint : BaseEndpoint<UserParam, UserResponseViewModel>
