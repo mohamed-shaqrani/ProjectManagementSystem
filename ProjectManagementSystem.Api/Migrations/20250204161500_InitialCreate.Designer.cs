@@ -12,8 +12,8 @@ using ProjectManagementSystem.Api.Data;
 namespace ProjectManagementSystem.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250125171827_updatTask")]
-    partial class updatTask
+    [Migration("20250204161500_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,8 +241,10 @@ namespace ProjectManagementSystem.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsAuthenticated")
                         .HasColumnType("bit");

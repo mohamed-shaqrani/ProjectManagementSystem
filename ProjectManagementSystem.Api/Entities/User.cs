@@ -9,12 +9,13 @@ public class User : BaseEntity
     public Role Role { get; set; }
 
     public string Phone { get; set; } = string.Empty;
-    public string ImagePath { get; set; } = string.Empty;
+    public string? ImagePath { get; set; } = string.Empty;
 
-  
+    public bool IsActive { get; set; } = true;
+
     public bool IsAuthenticated { get; set; }
 
-  
+
 
     public ICollection<ProjectUserRoles> ProjectUserRoles = new List<ProjectUserRoles>();
     public ICollection<ProjectTask> Tasks = new List<ProjectTask>();
