@@ -71,7 +71,16 @@ app.UseStaticFiles();
 MappingExtensions.Mapper = app.Services.GetRequiredService<IMapper>();
 
 
-
+//app.Use(async (context, next) =>
+//{
+  //  context.Request.EnableBuffering();
+    //var reader = new StreamReader(context.Request.Body, leaveOpen: true);
+    //var body = await reader.ReadToEndAsync();
+   
+  //  context.Request.Body.Position = 0;
+    //Console.WriteLine($"Request Body: {body}");
+    //await next();
+//});
 
 
 app.UseAuthorization();
