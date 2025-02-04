@@ -1,15 +1,19 @@
 ﻿using MediatR;
+using PredicateExtensions;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Helpers;
+using ProjectManagementSystem.Api.MappingProfiles;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response.RequestResult;
+using System.Linq.Expressions;
 
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Queries
 {
-    public record GetTasksQuery():IRequest<RequestResult<IEnumerable<TaskDTO>>>;
+    public record GetTasksQuery(TaskParam TaskParam) : IRequest<RequestResult<PageList<TaskDTO>>>;
 
-    public class GetTasksQueryHandler : BaseRequestHandler<GetTasksQuery, RequestResult<IEnumerable<TaskDTO>>>
+    public class GetTasksQueryHandler : BaseRequestHandler<GetTasksQuery, RequestResult<PageList<TaskDTO>>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -17,32 +21,26 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Que
         {
             _unitOfWork = unitOfWork;
         }
-        public override async Task<RequestResult<IEnumerable<TaskDTO>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
+        public override async Task<RequestResult<PageList<TaskDTO>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
         {
-            var response = await ValidateRequest(request);
-            if (!response.IsSuccess)
-            {
-                return response;
-            }
 
-            var projects = _unitOfWork.GetRepository<ProjectTask>()
-                    .GetAll()
-                    .Select(
-                        x => new TaskDTO {
-                            Title = x.Title,
-                            Status = x.Status,
-                            UserName = x.User.Username,
-                            ProjectName = x.Project.Title,
-                            DateCreated = x.CreatedAt,
-                        }
-                    ).ToList();
-            return RequestResult<IEnumerable<TaskDTO>>.Success(projects, "Success");
+            var predicate = BuildPredicate(request.TaskParam);
+            var query = _unitOfWork.GetRepository<ProjectTask>().GetAll().ProjectTo<TaskDTO>();
+            var res = await PageList<TaskDTO>.CreateAsync(query, request.TaskParam.PageNumber, request.TaskParam.PageSize);
+
+            return RequestResult<PageList<TaskDTO>>.Success(res, "Success");
+        }
+        private Expression<Func<ProjectTask, bool>> BuildPredicate(TaskParam request)
+        {
+            var predicate = PredicateExtensions.PredicateExtensions.Begin<ProjectTask>(true);
+            if (!string.IsNullOrEmpty(request.UserName))
+                predicate = predicate.And(p => p.User.Username.Contains(request.UserName));
+            if (!string.IsNullOrEmpty(request.ProjectTitle))
+                predicate = predicate.And(p => p.Project.Title.Contains(request.ProjectTitle));
+
+            return predicate;
         }
 
-        private async Task<RequestResult<IEnumerable<TaskDTO>>> ValidateRequest(GetTasksQuery request)
-        {
-            return RequestResult<IEnumerable<TaskDTO>>.Success(default, "Success");
-        }
     }
 
 }

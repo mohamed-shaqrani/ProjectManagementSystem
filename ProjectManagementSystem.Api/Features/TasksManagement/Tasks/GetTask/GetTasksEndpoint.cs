@@ -1,37 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Queries;
+using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
 {
-    [Route("api/Task/")]
-    public class GetTasksEndpoint : BaseEndpoint<TaskRequestViewModel, IEnumerable<TaskResponseViewModel>>
+    [Route("api/task/")]
+    public class GetTasksEndpoint : BaseEndpoint<TaskParam, IEnumerable<TaskDTO>>
     {
-        public GetTasksEndpoint(BaseEndpointParam<TaskRequestViewModel> param) : base(param)
+        public GetTasksEndpoint(BaseEndpointParam<TaskParam> param) : base(param)
         {
         }
 
         [HttpGet]
-        public async Task<EndpointResponse<IEnumerable<TaskResponseViewModel>>> GetTasks()
+        public async Task<ActionResult<EndpointResponse<TaskDTO>>> GetTasks(TaskParam taskParam)
         {
-            var result = await _mediator.Send(new GetTasksQuery());
+            var result = await _mediator.Send(new GetTasksQuery(taskParam));
 
-
-            var responseViewModels = result.Data.Select(x=>new TaskResponseViewModel
-            {
-                Title = x.Title,
-                Status = x.Status,
-                UserName = x.UserName,
-                ProjectName = x.ProjectName,
-                DateCreated = x.DateCreated,
-            });
-
-            return result.IsSuccess ?
-                EndpointResponse<IEnumerable<TaskResponseViewModel>>
-                                .Success(responseViewModels, "Success")
-                             : EndpointResponse<IEnumerable<TaskResponseViewModel>>
-                                .Failure(result.ErrorCode, result.Message);
+            return result.IsSuccess ? Ok(EndpointResponse<PageList<TaskDTO>>.Success(result.Data, "Success"))
+                                : StatusCode(500, EndpointResponse<PageList<TaskDTO>>.Failure(result.ErrorCode, result.Message));
 
 
         }
