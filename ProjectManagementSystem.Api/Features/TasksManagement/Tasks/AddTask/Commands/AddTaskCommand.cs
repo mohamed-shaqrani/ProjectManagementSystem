@@ -55,6 +55,10 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Com
             {
                 return RequestResult<bool>.Failure(ErrorCode.ProjectNotExist, "Project not found");
             }
+            if (!Enum.IsDefined(typeof(ProjectTaskStatus), request.Status))
+            {
+                return RequestResult<bool>.Failure(ErrorCode.InvalidTaskStatus, "Task status value is invalid");
+            }
 
             return RequestResult<bool>.Success(default, "Success");
         }
