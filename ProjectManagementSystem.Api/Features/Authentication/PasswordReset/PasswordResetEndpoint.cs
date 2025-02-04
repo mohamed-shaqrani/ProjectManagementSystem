@@ -14,16 +14,16 @@ public class PasswordResetEndpoint : BaseEndpoint<PasswordResetViewModel, bool>
     }
 
     [HttpPost]
-    public async Task<EndpointResponse<string>> PasswordReset([FromBody] PasswordResetViewModel param)
+    public async Task<ActionResult<EndpointResponse<string>>> PasswordReset([FromBody] PasswordResetViewModel param)
     {
         var validationResult = ValidateRequest(param);
         if (!validationResult.IsSuccess)
-            return EndpointResponse<string>.Failure(validationResult.ErrorCode, validationResult.Message);
+            return BadRequest(EndpointResponse<string>.Failure(validationResult.ErrorCode, validationResult.Message));
 
         var command = new PasswordResetCommand(param.Email, param.NewPassword, param.OTP);
         var result = await _mediator.Send(command);
 
-        return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty, result.Message)
-                                : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
+        return result.IsSuccess ? Ok( EndpointResponse<string>.Success(string.Empty, result.Message))
+                                : Unauthorized( EndpointResponse<string>.Failure(result.ErrorCode, result.Message));
     }
 }

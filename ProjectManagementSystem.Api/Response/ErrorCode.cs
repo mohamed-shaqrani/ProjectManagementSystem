@@ -6,29 +6,30 @@ public enum ErrorCode
     ValidationError = 01,
     DataBaseError = 02,
 
+    InternalServerError = 500,
 
-    // AUTH
-    ChangePasswordError = 100,
-    IncorrectPassword = 101,
 
     // USER
-    UserNotFound = 200,
-    UserNameExist = 201,
-    UserEmailExist = 202,
-    UserPhoneExist = 203,
-    InvalidCode = 204,
+    UserNotFound = 600,
+    UserNameExist = 601,
+    UserEmailExist = 602,
+    UserEmailNotExist = 603,
+    UserPhoneExist = 604,
+    InvalidCode = 605,
 
     // Project
-    ProjectExist = 301,
-    ProjectNotExist =302,
+    ProjectExist = 700,
+    ProjectNotExist = 701,
 
 
     // Task
-    TaskNotExist = 401,
+    TaskNotExist = 800,
 
-    ProjectDoesNotExist = 302,
+    ProjectDoesNotExist = 801,
 
-    ProjectHasTasks = 303,
+    ProjectHasTasks = 802,
     //
-   InternalServerError =500,
+    // AUTH
+    ChangePasswordError = 900,
+    IncorrectPassword = 901,
 }

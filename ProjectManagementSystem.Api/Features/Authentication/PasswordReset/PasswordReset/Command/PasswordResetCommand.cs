@@ -5,6 +5,7 @@ using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.Common.OTPService;
 using ProjectManagementSystem.Api.Repository;
+using ProjectManagementSystem.Api.Response;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.PasswordReset.PasswordReset.Command;
@@ -32,6 +33,11 @@ public class PasswordResetCommandHandler : BaseRequestHandler<PasswordResetComma
         var response = await ValidateRequest(request);
         if (!response.IsSuccess)
             return response;
+        var doesEmailExist = await _unitOfWork.GetRepository<User>()
+                                    .AnyAsync(u => u.Email == request.Email);
+        if (!doesEmailExist)
+            return RequestResult<bool>.Failure(ErrorCode.UserEmailNotExist, "Email not found");
+
 
         var userid = await _unitOfWork.GetRepository<User>()
                                     .GetAll(u => u.Email == request.Email)

@@ -7,13 +7,8 @@ using ProjectManagementSystem.Api.Response.Endpint;
 namespace ProjectManagementSystem.Api.Features.Authentication.Login
 {
     [Route("api/auth/login")]
-    public class LoginEndpoint : BaseEndpoint<LoginViewModel, LoginViewModel>
+    public class LoginEndpoint(BaseEndpointParam<LoginViewModel> param) : BaseEndpoint<LoginViewModel, LoginViewModel>(param)
     {
-        public LoginEndpoint(BaseEndpointParam<LoginViewModel> param) : base(param)
-        {
-
-        }
-
         [HttpPost]
 
         public async Task<ActionResult<EndpointResponse<AuthModel>>> Login([FromBody] LoginViewModel model)
