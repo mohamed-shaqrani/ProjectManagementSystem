@@ -1,5 +1,4 @@
-﻿using HotelManagement.Core.ViewModels.Response;
-using HotelManagement.Service.PasswordHasherServices;
+﻿using HotelManagement.Service.PasswordHasherServices;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -9,27 +8,28 @@ using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response;
+using ProjectManagementSystem.Api.Response.RequestResult;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
 {
-    public record LoginCommand(string Email, string Password) : IRequest<ResponseViewModel<AuthModel>>;
+    public record LoginCommand(string Email, string Password) : IRequest<RequestResult<AuthModel>>;
 
 
-    public class AuthanticationHandler : BaseRequestHandler<LoginCommand, ResponseViewModel<AuthModel>>
+    public class AuthanticationHandler : BaseRequestHandler<LoginCommand, RequestResult<AuthModel>>
     {
         private IUnitOfWork _unitofwork;
 
         private JWT jwt;
-        public AuthanticationHandler(IUnitOfWork unitOfWork, IOptions<JWT> jwt,BaseRequestHandlerParam param) : base(param) 
+        public AuthanticationHandler(IUnitOfWork unitOfWork, IOptions<JWT> jwt, BaseRequestHandlerParam param) : base(param)
         {
             _unitofwork = unitOfWork;
             this.jwt = jwt.Value;
         }
 
-        public override async Task<ResponseViewModel<AuthModel>> Handle(LoginCommand loginCommand, CancellationToken token)
+        public override async Task<RequestResult<AuthModel>> Handle(LoginCommand loginCommand, CancellationToken token)
         {
             var authModel = new AuthModel();
 
@@ -37,10 +37,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
             var user = await _unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
 
             if (user == null)
-            {
-                return new FailureResponseViewModel<AuthModel>(ErrorCode.UserNotFound);
 
-            }
+                return RequestResult<AuthModel>.Failure(ErrorCode.UserNotFound, "Email is Incorrect");
+
+
 
             var correctPassword = PasswordHasherService.ValidatePassword(loginCommand.Password, user.Password);
             if (correctPassword)
@@ -54,10 +54,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
                 authModel.Email = user.Email;
                 authModel.UserName = user.Username;
 
-                return new SuccessResponseViewModel<AuthModel>(SuccessCode.LoginCorrectly, authModel);
+                return RequestResult<AuthModel>.Success(authModel, "Login Succeeded");
 
             }
-            return new FailureResponseViewModel<AuthModel>(ErrorCode.IncorrectPassword);
+            return RequestResult<AuthModel>.Failure(ErrorCode.IncorrectPassword, "Incorrect Password");
 
         }
 

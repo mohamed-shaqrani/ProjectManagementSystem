@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Features.Authentication.Login.Command;
 using ProjectManagementSystem.Api.Features.Common;
+using ProjectManagementSystem.Api.Response;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.Authentication.Login
@@ -13,10 +14,9 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
 
         }
 
-
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthModel>> Login([FromBody] LoginViewModel model)
+        public async Task<ActionResult<EndpointResponse<AuthModel>>> Login([FromBody] LoginViewModel model)
         {
             var validationResult = ValidateRequest(model);
             if (!validationResult.IsSuccess)
@@ -27,11 +27,10 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login
             var res = await _mediator.Send(logincommand);
 
             if (res.IsSuccess)
-            {
-                return EndpointResponse<AuthModel>.Success(res.Data, "Login Successfully");
-            }
+                return EndpointResponse<AuthModel>.Success(res.Data, res.Message);
 
-            return EndpointResponse<AuthModel>.Failure(res.ErrorCode.Value, res.Message);
+
+            return Unauthorized(EndpointResponse<AuthModel>.Failure(ErrorCode.DataBaseError, "Email or password is incorrect."));
         }
     }
 }
