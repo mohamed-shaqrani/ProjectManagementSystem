@@ -5,7 +5,9 @@ public enum ErrorCode
     None = 00,
     ValidationError = 01,
     DataBaseError = 02,
+    //
 
+    NotFound = 400,
 
     // AUTH
     ChangePasswordError = 100,
