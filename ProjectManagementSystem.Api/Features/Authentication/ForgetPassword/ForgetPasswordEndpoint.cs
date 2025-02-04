@@ -13,16 +13,16 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ForgetPassword
         }
 
         [HttpPost]
-        public async Task<EndpointResponse<string>> ForgetPassword([FromBody] ForgetPassRequestViewModel param)
+        public async Task<ActionResult<EndpointResponse<string>>> ForgetPassword([FromBody] ForgetPassRequestViewModel param)
         {
             var validationResult = ValidateRequest(param);
             if (!validationResult.IsSuccess)
-                return EndpointResponse<string>.Failure(validationResult.ErrorCode, validationResult.Message);
+                return BadRequest(EndpointResponse<string>.Failure(validationResult.ErrorCode, validationResult.Message));
 
             var result = await _mediator.Send(new ForgetPasswordCommand(param.Email));
 
-            return result.IsSuccess ? EndpointResponse<string>.Success(string.Empty, "Email Sent with OTP verification code")
-                             : EndpointResponse<string>.Failure(result.ErrorCode, result.Message);
+            return result.IsSuccess ? Ok(EndpointResponse<string>.Success(string.Empty, "Email Sent with OTP verification code"))
+                             : Unauthorized(EndpointResponse<string>.Failure(result.ErrorCode, result.Message));
         }
 
     }
