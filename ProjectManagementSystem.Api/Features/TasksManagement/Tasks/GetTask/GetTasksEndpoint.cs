@@ -20,6 +20,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
 
             var responseViewModels = result.Data.Select(x=>new TaskResponseViewModel
             {
+                TaskId = x.TaskId,
                 Title = x.Title,
                 Status = x.Status,
                 UserName = x.UserName,

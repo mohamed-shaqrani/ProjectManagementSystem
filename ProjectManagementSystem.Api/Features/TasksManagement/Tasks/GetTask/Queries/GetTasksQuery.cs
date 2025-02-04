@@ -29,6 +29,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Que
                     .GetAll()
                     .Select(
                         x => new TaskDTO {
+                            TaskId = x.Id,
                             Title = x.Title,
                             Status = x.Status,
                             UserName = x.User.Username,
