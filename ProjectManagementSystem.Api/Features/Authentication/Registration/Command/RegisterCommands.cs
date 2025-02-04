@@ -44,7 +44,11 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Registration.Comma
 
             var password = PasswordHasherService.HashPassord(request.password);
             var role = Role.User;
-            var imagePath = await _imageService.UploadImage(request.imageFile, "users");
+            string imagePath = string.Empty;
+            if (request.imageFile is not null)
+                imagePath = await _imageService.UploadImage(request.imageFile, "users");
+
+
             var user = new UserTempData { Email = request.email, Password = password, Role = role, UserName = request.username, Phone = request.phone, ImagePath = imagePath };
 
 

@@ -29,5 +29,6 @@ public enum ErrorCode
     ProjectDoesNotExist = 302,
 
     ProjectHasTasks = 303,
-
+    //
+   InternalServerError =500,
 }
