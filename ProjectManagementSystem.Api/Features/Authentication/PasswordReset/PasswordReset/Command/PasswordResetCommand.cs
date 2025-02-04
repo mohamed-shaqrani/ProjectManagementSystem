@@ -1,5 +1,4 @@
-﻿using HotelManagement.Service.PasswordHasherServices;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;

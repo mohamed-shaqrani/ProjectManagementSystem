@@ -15,22 +15,19 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount
 
         [HttpPost]
 
-        public async Task<EndpointResponse<AuthModel>> Register([FromBody] ConfirmAccountViewModel model)
+        public async Task<ActionResult<EndpointResponse<AuthModel>>> Register([FromBody] ConfirmAccountViewModel model)
         {
             var validationResult = ValidateRequest(model);
             if (!validationResult.IsSuccess)
-                return EndpointResponse<AuthModel>.Failure(validationResult.ErrorCode, validationResult.Message);
+                return BadRequest(EndpointResponse<AuthModel>.Failure(validationResult.ErrorCode, validationResult.Message));
 
             var register = new ConfirmAccountCommand(model.code);
 
             var res = await _mediator.Send(register);
 
-            if (res.IsSuccess)
-            {
-                return EndpointResponse<AuthModel>.Success(res.Data, "Register Successfully");
-            }
+            return res.IsSuccess ? Ok(EndpointResponse<AuthModel>.Success(res.Data, res.Message))
 
-            return EndpointResponse<AuthModel>.Failure(res.ErrorCode, "Register Unsuccessfully");
+                                 : Unauthorized(EndpointResponse<AuthModel>.Failure(res.ErrorCode, res.Message));
         }
     }
 }

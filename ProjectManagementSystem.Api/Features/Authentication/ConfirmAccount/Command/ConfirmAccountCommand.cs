@@ -36,19 +36,12 @@ namespace ProjectManagementSystem.Api.Features.Authentication.ConfirmAccount.com
 
             var authModel = new AuthModel();
 
-            if (string.IsNullOrEmpty(request.code))
-            {
-                return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
-            }
-
-
-
             var Tempuser = _otpservice.GetTempUser(request.code);
             if (Tempuser == null)
-            {
-                return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation error code is wrong");
 
-            }
+                return RequestResult<AuthModel>.Failure(Response.ErrorCode.ValidationError, "validation  code is wrong");
+
+
             var user = new User()
             {
                 Email = Tempuser.Email,

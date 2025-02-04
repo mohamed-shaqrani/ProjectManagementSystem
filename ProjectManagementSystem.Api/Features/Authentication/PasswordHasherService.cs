@@ -1,11 +1,11 @@
 ﻿using System.Security.Cryptography;
 
-namespace HotelManagement.Service.PasswordHasherServices
+namespace ProjectManagementSystem.Api.Features.Authentication
 {
 
     public static class PasswordHasherService
     {
-        public static String HashPassord(string password)
+        public static string HashPassord(string password)
         {
             var salt = GenerateSalt();
             var hashedPassword = HashPasswordWithSalt(password, salt);
