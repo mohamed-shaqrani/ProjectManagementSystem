@@ -14,12 +14,12 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
         }
 
         [HttpGet]
-        public async Task<ActionResult<EndpointResponse<TaskDTO>>> GetTasks(TaskParam taskParam)
+        public async Task<ActionResult<EndpointResponse<TaskDTO>>> GetTasks([FromQuery] TaskParam taskParam)
         {
             var result = await _mediator.Send(new GetTasksQuery(taskParam));
 
             return result.IsSuccess ? Ok(EndpointResponse<PageList<TaskDTO>>.Success(result.Data, "Success"))
-                                : StatusCode(500, EndpointResponse<PageList<TaskDTO>>.Failure(result.ErrorCode, result.Message));
+                                : NotFound(EndpointResponse<PageList<TaskDTO>>.Failure(result.ErrorCode, result.Message));
 
 
         }

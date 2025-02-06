@@ -30,6 +30,8 @@ public enum ErrorCode
     ProjectDoesNotExist = 801,
 
     ProjectHasTasks = 802,
+    InvalidTaskStatus = 803,
+
     //
     // AUTH
     ChangePasswordError = 900,

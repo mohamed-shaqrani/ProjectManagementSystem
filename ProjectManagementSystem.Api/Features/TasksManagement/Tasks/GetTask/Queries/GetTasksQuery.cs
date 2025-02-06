@@ -25,7 +25,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Que
         {
 
             var predicate = BuildPredicate(request.TaskParam);
-            var query = _unitOfWork.GetRepository<ProjectTask>().GetAll().ProjectTo<TaskDTO>();
+            var query = _unitOfWork.GetRepository<ProjectTask>().GetAll(predicate).ProjectTo<TaskDTO>();
             var res = await PageList<TaskDTO>.CreateAsync(query, request.TaskParam.PageNumber, request.TaskParam.PageSize);
 
             return RequestResult<PageList<TaskDTO>>.Success(res, "Success");
@@ -35,6 +35,10 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Que
             var predicate = PredicateExtensions.PredicateExtensions.Begin<ProjectTask>(true);
             if (!string.IsNullOrEmpty(request.UserName))
                 predicate = predicate.And(p => p.User.Username.Contains(request.UserName));
+
+            if (!string.IsNullOrEmpty(request.TaskTitle))
+                predicate = predicate.And(p => p.Title.Contains(request.TaskTitle));
+
             if (!string.IsNullOrEmpty(request.ProjectTitle))
                 predicate = predicate.And(p => p.Project.Title.Contains(request.ProjectTitle));
 

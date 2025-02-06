@@ -5,20 +5,20 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.UpdateTask
 {
-    [Route("api/Task")]
+    [Route("api/task")]
 
-    public class UpdateTaskEndpoint : BaseEndpoint<UpdateTaskRequestViewModel , EndpointResponse<bool>>
+    public class UpdateTaskEndpoint : BaseEndpoint<UpdateTaskRequestViewModel, EndpointResponse<bool>>
     {
         public UpdateTaskEndpoint(BaseEndpointParam<UpdateTaskRequestViewModel> param) : base(param)
         {
         }
 
         [HttpPut]
-        public async Task<EndpointResponse<bool>> Update([FromBody] UpdateTaskRequestViewModel viewModel)
+        public async Task<ActionResult<EndpointResponse<bool>>> Update([FromBody] UpdateTaskRequestViewModel viewModel)
         {
             var result = await _mediator.Send(new UpdateTaskCommand(viewModel.TaskID, viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID, viewModel.ProjectID));
-            return result.IsSuccess ? EndpointResponse<bool>.Success(true, "Success")
-                                    : EndpointResponse<bool>.Failure(result.ErrorCode, result.Message);
+            return result.IsSuccess ? Ok(EndpointResponse<bool>.Success(true, "Success"))
+                                    : StatusCode(500, EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
         }
 
     }
