@@ -31,6 +31,7 @@ public enum ErrorCode
 
     ProjectHasTasks = 802,
     InvalidTaskStatus = 803,
+    TaskDoesNotBelongToUser = 804,
 
     //
     // AUTH

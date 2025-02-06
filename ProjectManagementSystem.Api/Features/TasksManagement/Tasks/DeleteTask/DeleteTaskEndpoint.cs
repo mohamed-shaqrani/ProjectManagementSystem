@@ -13,7 +13,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
         {
         }
 
-        [HttpDelete("{vm}")]
+        [HttpDelete("{taskId}")]
         public async Task<ActionResult<EndpointResponse<bool>>> Delete(int taskId)
         {
             if (taskId < 1)

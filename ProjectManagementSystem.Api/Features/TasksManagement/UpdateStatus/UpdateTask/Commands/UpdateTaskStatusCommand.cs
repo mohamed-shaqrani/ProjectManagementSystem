@@ -8,7 +8,7 @@ using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.UpdateStatus.UpdateTask.Commands
 {
-    public record UpdateTaskStatusCommand(int TaskID, ProjectTaskStatus Status) : IRequest<RequestResult<bool>>;
+    public record UpdateTaskStatusCommand(int TaskID, ProjectTaskStatus Status, bool IsAadmin, string email) : IRequest<RequestResult<bool>>;
 
     public class UpdateTaskStatusHandler : BaseRequestHandler<UpdateTaskStatusCommand, RequestResult<bool>>
     {
@@ -54,6 +54,17 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.UpdateStatus.Upda
             if (sameOldStatus)
             {
                 return RequestResult<bool>.Failure(ErrorCode.TaskNotExist, $"Task Status Already {Enum.GetName(typeof(ProjectTaskStatus), request.Status)}");
+            }
+            if (!request.IsAadmin)
+            {
+
+                var userId = _unitOfWork.GetRepository<ProjectTask>().GetAll().Where(a => a.Id == request.TaskID).Select(a => a.UserID).First();
+                var doesTaskBelongToUser = await _unitOfWork.GetRepository<User>().AnyAsync(a => a.Id == userId && a.Email == request.email);
+                if (!doesTaskBelongToUser)
+                {
+                    return RequestResult<bool>.Failure(ErrorCode.TaskDoesNotBelongToUser, message: $"Task Status can not be updates as it does not belong to the user");
+
+                }
             }
 
             return RequestResult<bool>.Success(default, "Success");
