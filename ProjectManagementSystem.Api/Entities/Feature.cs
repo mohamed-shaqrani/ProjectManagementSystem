@@ -13,5 +13,8 @@ public enum Feature
     AddTask,
     DeleteTask,
     UpdateTask,
-    ViewTask
+    ViewTask,
+    //user Management
+
+
 }

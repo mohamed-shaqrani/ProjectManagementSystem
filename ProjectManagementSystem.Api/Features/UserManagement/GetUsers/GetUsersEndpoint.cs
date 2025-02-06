@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.UserManagement.GetUsers.Queries;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Response.Endpint;
 
@@ -14,7 +17,11 @@ public class GetUsersEndpoint : BaseEndpoint<UserParam, UserResponseViewModel>
     {
 
     }
+    [Authorize]
+    [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.ViewUsers })]
+
     [HttpGet]
+
     public async Task<ActionResult<EndpointResponse<PageList<UserResponseViewModel>>>> GetAll([FromQuery] UserParam projectParam)
     {
         var query = new GetUsersQuery(projectParam);

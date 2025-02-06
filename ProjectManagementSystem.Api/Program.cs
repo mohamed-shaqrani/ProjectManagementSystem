@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ProjectManagementSystem.Api.Config;
 using ProjectManagementSystem.Api.Data;
 using ProjectManagementSystem.Api.Extensions;
@@ -48,7 +49,10 @@ builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection(
 
 
 builder.Services.AddMemoryCache();
-
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+});
 
 
 var app = builder.Build();
@@ -58,6 +62,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = ""; // Set Swagger at root (optional)
+});
+app.UseSwagger();
+
 app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

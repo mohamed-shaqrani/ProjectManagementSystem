@@ -16,6 +16,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
         {
         }
         [Authorize]
+        [HttpGet]
         public async Task<ActionResult<Dictionary<ProjectTaskStatus, List<GetUserTasksResponseViewModel>>>> GetTasks()
         {
             var userEmail = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Email)!.Value;

@@ -22,7 +22,7 @@ public class DeleteProjectEndpoint : BaseEndpoint<DeleteProjectRequestViewModel,
 
     [HttpDelete]
 
-    public async Task<ActionResult<EndpointResponse<bool>>> Update([FromBody] DeleteProjectRequestViewModel param)
+    public async Task<ActionResult<EndpointResponse<bool>>> Delete([FromBody] DeleteProjectRequestViewModel param)
     {
         var validationResult = ValidateRequest(param);
         var query = new DeleteProjectCommand(param.Id);
