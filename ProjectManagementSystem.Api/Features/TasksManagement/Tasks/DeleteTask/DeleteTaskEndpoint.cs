@@ -1,24 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.Commands;
+using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.Queries;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
 {
-    [Route("api/Task/")]
+    [Route("api/task/")]
     public class DeleteTaskEndpoint : BaseEndpoint<DeleteTaskRequestViewModel, bool>
     {
         public DeleteTaskEndpoint(BaseEndpointParam<DeleteTaskRequestViewModel> param) : base(param)
         {
         }
 
-        [HttpDelete("{TaskID}")]
-        public async Task<EndpointResponse<bool>> Delete(int TaskID)
+        [HttpDelete("{taskId}")]
+        public async Task<ActionResult<EndpointResponse<bool>>> Delete(int taskId)
         {
-           var result = await _mediator.Send(new DeleteTaskCommand(TaskID));
+            var doesTaskExist = await _mediator.Send(new IsTaskExistQuery(taskId));
 
-            return result.IsSuccess ? EndpointResponse<bool>.Success(true , "Deleted Successfully")
-                                    : EndpointResponse<bool>.Failure(result.ErrorCode, result.Message);
+            if (!doesTaskExist.IsSuccess)
+                return Unauthorized(EndpointResponse<bool>.Failure(doesTaskExist.ErrorCode, doesTaskExist.Message));
+
+            var result = await _mediator.Send(new DeleteTaskCommand(taskId));
+
+            return result.IsSuccess ? EndpointResponse<bool>.Success(true, "Deleted Successfully")
+                                    : StatusCode(500, EndpointResponse<bool>.Failure(result.ErrorCode, result.Message));
         }
 
     }

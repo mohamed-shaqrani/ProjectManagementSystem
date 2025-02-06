@@ -21,7 +21,7 @@ public class CustomizeAuthorizeAttribute : ActionFilterAttribute
         {
             throw new UnauthorizedAccessException();
         }
-        var role = (Role)int.Parse(roleId.Value);
+        Enum.TryParse<Role>(roleId.Value, out var role);
         if (!await _roleFeatureService.HasAcess(role, _feature))
         {
             throw new UnauthorizedAccessException();

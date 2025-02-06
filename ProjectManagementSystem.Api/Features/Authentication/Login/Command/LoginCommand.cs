@@ -35,9 +35,15 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
 
             var user = await _unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
 
+
+
             if (user == null)
 
-                return RequestResult<AuthModel>.Failure(ErrorCode.UserNotFound, "Email is Incorrect");
+                return RequestResult<AuthModel>.Failure(ErrorCode.UserNotFound, "Email or Password is Incorrect");
+
+            if (!user.IsActive)
+                return RequestResult<AuthModel>.Failure(ErrorCode.UserDeactivated, "This is DeActive");
+
 
 
 
@@ -56,7 +62,7 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
                 return RequestResult<AuthModel>.Success(authModel, "Login Succeeded");
 
             }
-            return RequestResult<AuthModel>.Failure(ErrorCode.IncorrectPassword, "Incorrect Password");
+            return RequestResult<AuthModel>.Failure(ErrorCode.IncorrectPassword, "Email or Password is Incorrect");
 
         }
 

@@ -8,7 +8,8 @@ public class DeActivateUserRequestViewModelValidator : AbstractValidator<DeActiv
 {
     public DeActivateUserRequestViewModelValidator()
     {
-        RuleFor(x => x.UserId).GreaterThan(0);
         RuleFor(x => x.DeActive).Equal(true);
+        RuleFor(x => x.UserId).GreaterThan(0);
+
     }
 }

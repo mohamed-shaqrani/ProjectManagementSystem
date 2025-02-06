@@ -5,7 +5,7 @@ using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
 {
-    [Route("api/Task/")]
+    [Route("api/task/")]
     public class AddTaskEndpoint : BaseEndpoint<AddTaskRequestViewModel, AddTaskResponseViewModel>
     {
         public AddTaskEndpoint(BaseEndpointParam<AddTaskRequestViewModel> param) : base(param)
@@ -13,15 +13,12 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
         }
 
         [HttpPost]
-        public async Task<EndpointResponse<AddTaskResponseViewModel>> CreateAsync([FromBody] AddTaskRequestViewModel viewModel)
+        public async Task<ActionResult<EndpointResponse<AddTaskResponseViewModel>>> CreateAsync([FromBody] AddTaskRequestViewModel viewModel)
         {
             var result = await _mediator.Send(new AddTaskCommand(viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID, viewModel.ProjectID));
 
-            return result.IsSuccess ? EndpointResponse<AddTaskResponseViewModel>
-                                                    .Success(new AddTaskResponseViewModel
-                                                    { Title = viewModel.Title }
-                                                    , "Success")
-                             : EndpointResponse<AddTaskResponseViewModel>.Failure(result.ErrorCode, result.Message);
+            return result.IsSuccess ? Ok(EndpointResponse<AddTaskResponseViewModel>.Success(new AddTaskResponseViewModel { Title = viewModel.Title }, "Success"))
+                                    : StatusCode(500, EndpointResponse<AddTaskResponseViewModel>.Failure(result.ErrorCode, result.Message));
         }
     }
 }

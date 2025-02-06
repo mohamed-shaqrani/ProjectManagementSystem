@@ -16,16 +16,16 @@ public class DeActivateUserHandler : BaseRequestHandler<DeActivateUserCommand, R
     {
         _unitOfWork = unitOfWork;
     }
+
     public override async Task<RequestResult<bool>> Handle(DeActivateUserCommand request, CancellationToken cancellationToken)
     {
-        var doesUserExist = await _unitOfWork.GetRepository<User>().AnyAsync(x => x.Id == x.Id);
+        var doesUserExist = await _unitOfWork.GetRepository<User>().AnyAsync(x => x.Id == request.UserId);
         if (!doesUserExist)
             return RequestResult<bool>.Failure(ErrorCode.UserNotFound, "User not found");
         var alreadyDeactivated = await _unitOfWork.GetRepository<User>().AnyAsync(x => x.Id == request.UserId && x.IsActive == false);
 
         if (alreadyDeactivated)
-            return RequestResult<bool>.Failure(ErrorCode.UserAlreadyDeactivated, "User is already Deactivated");
-
+            return RequestResult<bool>.Failure(ErrorCode.UserAlreadyDeactivated, "User has been DeActivated before");
         var user = new User
         {
             Id = request.UserId,

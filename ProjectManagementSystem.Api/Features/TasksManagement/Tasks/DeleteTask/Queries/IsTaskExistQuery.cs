@@ -6,7 +6,7 @@ using ProjectManagementSystem.Api.Response.RequestResult;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.Queries
 {
-    public record IsTaskExistQuery(int TaskID):IRequest<RequestResult<bool>>;
+    public record IsTaskExistQuery(int TaskID) : IRequest<RequestResult<bool>>;
 
     public class IsTaskExistQueryHandler : BaseRequestHandler<IsTaskExistQuery, RequestResult<bool>>
     {
@@ -21,7 +21,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.
             var isExist = await _unitOfWork.GetRepository<ProjectTask>().AnyAsync(x => x.Id == request.TaskID && !x.IsDeleted);
             if (isExist)
             {
-                return RequestResult<bool>.Success(true, "Task Exists correctly.");
+                return RequestResult<bool>.Success(true, "");
             }
             return RequestResult<bool>.Success(false, "Task is not Exist.");
         }

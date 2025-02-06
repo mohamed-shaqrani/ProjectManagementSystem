@@ -24,9 +24,10 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Com
         {
             var response = await ValidateRequest(request);
             if (!response.IsSuccess)
-            {
                 return response;
-            }
+
+
+
 
             var task = new ProjectTask
             {
@@ -54,6 +55,11 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Com
             if (!projectExist.Data)
             {
                 return RequestResult<bool>.Failure(ErrorCode.ProjectNotExist, "Project not found");
+            }
+            var taskExist = await _unitOfWork.GetRepository<ProjectTask>().AnyAsync(a => request.Title.Contains(a.Title));
+            if (taskExist)
+            {
+                return RequestResult<bool>.Failure(ErrorCode.TaskNotExist, "Task with the same title already exists");
             }
 
             return RequestResult<bool>.Success(default, "Success");

@@ -1,5 +1,4 @@
-﻿using Api.Entities;
-using ProjectManagementSystem.Api.Entities;
+﻿using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Repository;
 
 namespace ProjectManagementSystem.Api.Filters;
