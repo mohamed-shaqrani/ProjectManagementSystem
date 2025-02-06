@@ -13,7 +13,13 @@ public class RoleFeatureService : IRoleFeatureService
     public async Task<bool> HasAcess(Role role, Feature feature)
     {
         var result = await _UnitOfWork.GetRepository<RoleFeature>().AnyAsync(x => x.Role == role && x.Feature == feature);
+
         return result;
     }
 
+
+    public async Task<bool> IsUserActive(string email)
+    {
+        return await _UnitOfWork.GetRepository<User>().AnyAsync(x => x.Email == email && x.IsActive);
+    }
 }

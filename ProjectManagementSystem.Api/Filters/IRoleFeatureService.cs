@@ -4,4 +4,5 @@ namespace ProjectManagementSystem.Api.Filters;
 public interface IRoleFeatureService
 {
     Task<bool> HasAcess(Role role, Feature feature);
+    Task<bool> IsUserActive(string email);
 }

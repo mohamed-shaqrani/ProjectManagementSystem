@@ -26,6 +26,13 @@ public class CustomizeAuthorizeAttribute : ActionFilterAttribute
         {
             throw new UnauthorizedAccessException();
 
+
+        }
+        if (!await _roleFeatureService.IsUserActive(claims.FindFirst(ClaimTypes.Email).Value))
+        {
+            throw new UnauthorizedAccessException("This account is non Active");
+
+
         }
     }
 
