@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Queries;
+using ProjectManagementSystem.Api.Features.UserManagement.GetUsers.Queries;
 using ProjectManagementSystem.Api.Response.Endpint;
+using System.Security.Claims;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
 {
@@ -12,11 +15,12 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
         public GetUserTasksGroupedByStatusEndpoint(BaseEndpointParam<TaskParam> param) : base(param)
         {
         }
-
-        [HttpGet("{userID}")]
-        public async Task<ActionResult<Dictionary<ProjectTaskStatus, List<GetUserTasksResponseViewModel>>>> GetTasks(int userID)
+        [Authorize]
+        public async Task<ActionResult<Dictionary<ProjectTaskStatus, List<GetUserTasksResponseViewModel>>>> GetTasks()
         {
-            var result = await _mediator.Send(new GetUserTasksGroupedByStatusQuery(userID));
+            var userEmail = User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Email)!.Value;
+            var userId = await _mediator.Send(new GetUserIdByEmailQuery(userEmail));
+            var result = await _mediator.Send(new GetUserTasksGroupedByStatusQuery(userId.Data));
 
 
             return result.IsSuccess ? Ok(EndpointResponse<Dictionary<ProjectTaskStatus, List<GetUserTasksResponseViewModel>>>.Success(result.Data, "Success"))
