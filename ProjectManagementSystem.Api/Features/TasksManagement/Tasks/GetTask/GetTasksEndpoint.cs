@@ -17,10 +17,10 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
         {
         }
 
-        [HttpGet]
+
         [Authorize]
         [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.ViewTask })]
-
+        [HttpGet]
         public async Task<ActionResult<EndpointResponse<TaskDTO>>> GetTasks([FromQuery] TaskParam taskParam)
         {
             var result = await _mediator.Send(new GetTasksQuery(taskParam));

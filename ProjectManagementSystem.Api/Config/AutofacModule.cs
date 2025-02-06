@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject.Queries;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Repository;
 
@@ -30,6 +31,12 @@ public class AutofacModule : Module
         builder.RegisterType<ProjectAuthorizeHandler>()
                 .As<IAuthorizationHandler>()
                 .InstancePerDependency();
+
+
+        builder.RegisterType<RoleFeatureService>()
+                .As<IRoleFeatureService>()
+                .AsImplementedInterfaces();
+
 
         builder.RegisterAssemblyTypes(typeof(GetProjectsQueryHandler).Assembly);
 

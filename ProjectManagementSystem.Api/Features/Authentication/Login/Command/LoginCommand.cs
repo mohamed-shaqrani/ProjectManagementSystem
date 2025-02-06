@@ -32,7 +32,6 @@ namespace ProjectManagementSystem.Api.Features.Authentication.Login.Command
         {
             var authModel = new AuthModel();
 
-
             var user = await _unitofwork.GetRepository<User>().GetAll(e => e.Email == loginCommand.Email).FirstOrDefaultAsync();
 
 
