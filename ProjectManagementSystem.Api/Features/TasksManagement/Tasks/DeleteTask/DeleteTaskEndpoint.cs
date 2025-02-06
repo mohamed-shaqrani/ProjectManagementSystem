@@ -13,9 +13,13 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
         {
         }
 
-        [HttpDelete("{taskId}")]
+        [HttpDelete("{vm}")]
         public async Task<ActionResult<EndpointResponse<bool>>> Delete(int taskId)
         {
+            if (taskId < 1)
+            {
+                return BadRequest("provide valid id");
+            }
             var doesTaskExist = await _mediator.Send(new IsTaskExistQuery(taskId));
 
             if (!doesTaskExist.IsSuccess)

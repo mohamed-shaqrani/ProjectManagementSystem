@@ -5,9 +5,9 @@ using ProjectManagementSystem.Api.Repository;
 using ProjectManagementSystem.Api.Response;
 using ProjectManagementSystem.Api.Response.RequestResult;
 
-namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
+namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.UpdateProject.Commands;
 
-public record UpdateProjectCommand(string Title,int Id) : IRequest<RequestResult<bool>>;
+public record UpdateProjectCommand(string Title, int Id) : IRequest<RequestResult<bool>>;
 public class UpdateProjectHandler : BaseRequestHandler<UpdateProjectCommand, RequestResult<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +30,7 @@ public class UpdateProjectHandler : BaseRequestHandler<UpdateProjectCommand, Req
             UpdatedAt = DateTime.UtcNow,
             Title = request.Title,
         };
-         _unitOfWork.GetRepository<Project>().SaveInclude(project,a=>a.Title,a=>a.UpdatedAt);
+        _unitOfWork.GetRepository<Project>().SaveInclude(project, a => a.Title, a => a.UpdatedAt);
         await _unitOfWork.SaveChangesAsync();
         return RequestResult<bool>.Success(default, "Success");
     }

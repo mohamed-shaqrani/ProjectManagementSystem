@@ -16,14 +16,14 @@ public class GetProjectsEndpoint : BaseEndpoint<AddProjectRequestViewModel, AddP
 
     }
     [HttpGet]
-    public async Task<EndpointResponse<IEnumerable<ProjectResponseViewModel>>> GetAll([FromQuery] ProjectParam projectParam)
+    public async Task<EndpointResponse<PageList<ProjectResponseViewModel>>> GetAll([FromQuery] ProjectParam projectParam)
     {
         var query = new GetProjectsQuery(projectParam);
         var res = await _mediator.Send(query);
         Response.AddPaginationHeader(res.Data);
 
-        return res.IsSuccess ? EndpointResponse<IEnumerable<ProjectResponseViewModel>>.Success(res.Data, "Success")
-                             : EndpointResponse<IEnumerable<ProjectResponseViewModel>>.Failure(res.ErrorCode, res.Message);
+        return res.IsSuccess ? EndpointResponse<PageList<ProjectResponseViewModel>>.Success(res.Data, "Success")
+                             : EndpointResponse<PageList<ProjectResponseViewModel>>.Failure(res.ErrorCode, res.Message);
 
     }
 }

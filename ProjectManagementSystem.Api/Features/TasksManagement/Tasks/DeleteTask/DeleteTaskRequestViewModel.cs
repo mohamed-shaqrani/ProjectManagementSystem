@@ -8,7 +8,7 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
     {
         public DeleteTaskRequestViewModelValidator()
         {
-            RuleFor(x => x.TaskID).NotEmpty().WithMessage("Not empty");
+            RuleFor(x => x.TaskID).NotEmpty();
 
         }
     }

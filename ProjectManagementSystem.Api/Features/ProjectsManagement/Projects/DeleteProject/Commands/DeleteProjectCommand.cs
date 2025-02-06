@@ -8,7 +8,7 @@ using ProjectManagementSystem.Api.Response.RequestResult;
 namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
 
 public record DeleteProjectCommand(int Id) : IRequest<RequestResult<bool>>;
-public class DeleteProjectHandler : BaseRequestHandler<UpdateProjectCommand, RequestResult<bool>>
+public class DeleteProjectHandler : BaseRequestHandler<DeleteProjectCommand, RequestResult<bool>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -16,7 +16,7 @@ public class DeleteProjectHandler : BaseRequestHandler<UpdateProjectCommand, Req
     {
         _unitOfWork = unitOfWork;
     }
-    public override async Task<RequestResult<bool>> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
+    public override async Task<RequestResult<bool>> Handle(DeleteProjectCommand request, CancellationToken cancellationToken)
     {
         var projectExists = await _unitOfWork.GetRepository<Project>().AnyAsync(x => x.Id == request.Id);
 

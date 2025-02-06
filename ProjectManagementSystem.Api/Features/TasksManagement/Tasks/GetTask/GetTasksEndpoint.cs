@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask.Queries;
 using ProjectManagementSystem.Api.Helpers;
@@ -17,6 +18,8 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.GetTask
         public async Task<ActionResult<EndpointResponse<TaskDTO>>> GetTasks([FromQuery] TaskParam taskParam)
         {
             var result = await _mediator.Send(new GetTasksQuery(taskParam));
+
+            Response.AddPaginationHeader(result.Data);
 
             return result.IsSuccess ? Ok(EndpointResponse<PageList<TaskDTO>>.Success(result.Data, "Success"))
                                 : NotFound(EndpointResponse<PageList<TaskDTO>>.Failure(result.ErrorCode, result.Message));
