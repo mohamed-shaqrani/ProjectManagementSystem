@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject.Commands;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.DeleteProject;
@@ -14,7 +17,9 @@ public class DeleteProjectEndpoint : BaseEndpoint<DeleteProjectRequestViewModel,
 
     }
 
-    //  [Authorize(Roles ="User")]
+    [Authorize]
+    [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.DeleteProject })]
+
     [HttpDelete]
 
     public async Task<ActionResult<EndpointResponse<bool>>> Update([FromBody] DeleteProjectRequestViewModel param)

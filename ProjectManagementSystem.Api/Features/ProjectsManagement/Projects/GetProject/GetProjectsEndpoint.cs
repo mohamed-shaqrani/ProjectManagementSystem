@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Extensions;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.AddProject;
 using ProjectManagementSystem.Api.Features.ProjectsManagement.Projects.GetProject.Queries;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Helpers;
 using ProjectManagementSystem.Api.Response.Endpint;
 
@@ -16,6 +19,10 @@ public class GetProjectsEndpoint : BaseEndpoint<AddProjectRequestViewModel, AddP
 
     }
     [HttpGet]
+    [Authorize]
+    [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.ViewProject })]
+
+
     public async Task<EndpointResponse<PageList<ProjectResponseViewModel>>> GetAll([FromQuery] ProjectParam projectParam)
     {
         var query = new GetProjectsQuery(projectParam);

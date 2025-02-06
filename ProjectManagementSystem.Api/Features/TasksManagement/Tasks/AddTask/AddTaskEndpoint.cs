@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask.Commands;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
@@ -13,6 +16,9 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.AddTask
         }
 
         [HttpPost]
+        [Authorize]
+        [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.AddTask })]
+
         public async Task<ActionResult<EndpointResponse<AddTaskResponseViewModel>>> CreateAsync([FromBody] AddTaskRequestViewModel viewModel)
         {
             var result = await _mediator.Send(new AddTaskCommand(viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID, viewModel.ProjectID));

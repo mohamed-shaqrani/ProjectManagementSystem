@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.Commands;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask.Queries;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
@@ -12,6 +15,8 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.DeleteTask
         public DeleteTaskEndpoint(BaseEndpointParam<DeleteTaskRequestViewModel> param) : base(param)
         {
         }
+        [Authorize]
+        [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.DeleteTask })]
 
         [HttpDelete("{taskId}")]
         public async Task<ActionResult<EndpointResponse<bool>>> Delete(int taskId)

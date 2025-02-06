@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Api.Entities;
 using ProjectManagementSystem.Api.Features.Common;
 using ProjectManagementSystem.Api.Features.TasksManagement.Tasks.UpdateTask.Commands;
+using ProjectManagementSystem.Api.Filters;
 using ProjectManagementSystem.Api.Response.Endpint;
 
 namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.UpdateTask
@@ -14,6 +17,9 @@ namespace ProjectManagementSystem.Api.Features.TasksManagement.Tasks.UpdateTask
         }
 
         [HttpPut]
+        [Authorize]
+        [TypeFilter(typeof(CustomizeAuthorizeAttribute), Arguments = new object[] { Feature.UpdateTask })]
+
         public async Task<ActionResult<EndpointResponse<bool>>> Update([FromBody] UpdateTaskRequestViewModel viewModel)
         {
             var result = await _mediator.Send(new UpdateTaskCommand(viewModel.TaskID, viewModel.Title, viewModel.Description, viewModel.Status, viewModel.UserID, viewModel.ProjectID));
